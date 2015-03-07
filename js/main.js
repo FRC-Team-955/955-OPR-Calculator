@@ -3,7 +3,8 @@ var matchesPlayed = 0;		// Total matches played at an event
 var M = m4th.matrix;		// Matrix object to spawn more matrices from
 var matchesMatrix;			// Matrix containing team participation	
 var teamsMatrix;			// Matrix containing team numbers
-var teamsContainerMatrix;	// Matric containgin team containser
+var teamsContainerMatrix;	// Matrix containing team containers
+var teamsToteMatrix;		// Matrix containing team totes
 var eventRankingsData;		// Event ranking data
 var matchesData;			// Match data
 var teamsIndex = [];		// Team numbers containing indexes
@@ -53,6 +54,7 @@ function main()
 		matchesMatrix = M(totalTeams, matchesPlayed * 2);
 		teamsMatrix = M(totalTeams, 1);
 		teamsContainerMatrix = M(totalTeams, 1);
+		teamsToteMatrix = M(totalTeams, 1);
 		
 		// Set the teamsMatrix and teamsContainerMatrix
 		for(var i = 1; i < eventRankingsData.length; i++)
@@ -61,6 +63,7 @@ function main()
 			teamsIndex[teamNumber] = i - 1;								// Give each team number an teams matrix index
 			teamsMatrix.set(i - 1, 0, teamNumber);						// Set the teams matrix a number
 			teamsContainerMatrix.set(i - 1, 0, eventRankingsData[i][4])	// Set the teams containr matrix a number
+			teamsToteMatrix.set(i - 1, 0, eventRankingsData[i][7])	// Set the teams containr matrix a number
 		}
 		
 		// Initialize matchesMatrix data to 0
@@ -97,18 +100,19 @@ function main()
 		}
 		
 		// Print matrixs
-		for(var i = 0; i < matchesMatrix.rows; i++)
-		{
-			var str = "";
-			
-			for(var j = 0; j < matchesMatrix.columns; j++)
-				str += matchesMatrix.get(i, j);
-			
-			console.log(str + "K");
-		}
+//		for(var i = 0; i < matchesMatrix.rows; i++)
+//		{
+//			var str = "";
+//			
+//			for(var j = 0; j < matchesMatrix.columns; j++)
+//				str += matchesMatrix.get(i, j);
+//			
+//			console.log(str + "K");
+//		}
 		
 //		console.log(teamsMatrix);
 //		console.log(teamsContainerMatrix);
+		console.log(teamsToteMatrix);
 	}
 }
 
