@@ -18,8 +18,8 @@ $(document).ready(init);
 function init() 
 {
 	console.log("Init");
-	getData("event/2015txda/rankings", getEventRankings);
-	getData("event/2015txda/matches", getMatchesData);
+	getData("event/2015orore/rankings", getEventRankings);
+	getData("event/2015orore/matches", getMatchesData);
 	main();
 }
 
@@ -100,19 +100,19 @@ function main()
 		}
 		
 		// Print matrixs
-//		for(var i = 0; i < matchesMatrix.rows; i++)
-//		{
-//			var str = "";
-//			
-//			for(var j = 0; j < matchesMatrix.columns; j++)
-//				str += matchesMatrix.get(i, j);
-//			
-//			console.log(str + "K");
-//		}
+		for(var i = 0; i < matchesMatrix.rows; i++)
+		{
+			var str = "";
+			
+			for(var j = 0; j < matchesMatrix.columns; j++)
+				str += matchesMatrix.get(i, j);
+			
+			console.log(str + " || " + teamsMatrix.get(i, 0));
+		}
 		
 //		console.log(teamsMatrix);
 //		console.log(teamsContainerMatrix);
-		console.log(teamsToteMatrix);
+//		console.log(teamsToteMatrix);
 	}
 }
 
