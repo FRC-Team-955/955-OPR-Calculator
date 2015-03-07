@@ -5,6 +5,8 @@ var matchesMatrix;			// Matrix containing team participation
 var teamsMatrix;			// Matrix containing team numbers
 var teamsContainerMatrix;	// Matrix containing team containers
 var teamsToteMatrix;		// Matrix containing team totes
+var teamParticipationMatrix;// Matrix containing team participation in a match
+var matchSumMatrix;			// Matrix containing match sum
 var eventRankingsData;		// Event ranking data
 var matchesData;			// Match data
 var teamsIndex = [];		// Team numbers containing indexes
@@ -55,6 +57,8 @@ function main()
 		teamsMatrix = M(totalTeams, 1);
 		teamsContainerMatrix = M(totalTeams, 1);
 		teamsToteMatrix = M(totalTeams, 1);
+		teamParticipationMatrix = getEmptyMatrix(matchesPlayed * 2, totalTeams);
+		matchSumMatrix = M(matchesPlayed * 2, 1);
 		
 		// Set the teamsMatrix and teamsContainerMatrix
 		for(var i = 1; i < eventRankingsData.length; i++)
@@ -86,6 +90,7 @@ function main()
 				{
 					var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3));
 					matchesMatrix.set(teamsIndex[teamNumber], (matchNumber - 1) * 2, 1);
+					teamParticipationMatrix.set((matchNumber - 1) * 2, teamsIndex[teamNumber], 1);
 					//console.log(matchNumber);
 				}
 				
@@ -94,20 +99,35 @@ function main()
 				{
 					var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3));
 					matchesMatrix.set(teamsIndex[teamNumber], ((matchNumber - 1) * 2) + 1, 1);
+					teamParticipationMatrix.set(((matchNumber - 1) * 2) + 1, teamsIndex[teamNumber], 1);
 					//console.log(matchNumber);
 				}
+				
+				// Add match sums to matrix
+				matchSumMatrix.set((matchNumber - 1) * 2, 1, matchesData[i].alliances.red.score);
+				matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 1, matchesData[i].alliances.blue.score);
 			}
 		}
 		
 		// Print matrixs
-		for(var i = 0; i < matchesMatrix.rows; i++)
+//		for(var i = 0; i < matchesMatrix.rows; i++)
+//		{
+//			var str = "";
+//			
+//			for(var j = 0; j < matchesMatrix.columns; j++)
+//				str += matchesMatrix.get(i, j);
+//			
+//			console.log(str + " || " + teamsMatrix.get(i, 0));
+//		}
+		
+		for(var i = 0; i < teamParticipationMatrix.rows; i++)
 		{
 			var str = "";
-			
-			for(var j = 0; j < matchesMatrix.columns; j++)
-				str += matchesMatrix.get(i, j);
-			
-			console.log(str + " || " + teamsMatrix.get(i, 0));
+
+			for(var j = 0; j < teamParticipationMatrix.columns; j++)
+				str += teamParticipationMatrix.get(i, j);
+
+			console.log(str + " || " + ((i / 2)+ 1) + " || " + matchSumMatrix.get(i, 1));
 		}
 		
 //		console.log(teamsMatrix);
@@ -124,6 +144,17 @@ function getEventRankings(data)
 function getMatchesData(data)
 {
 	matchesData = data;
+}
+
+function getEmptyMatrix(row, column)
+{
+	var matrix = M(row, column);
+	
+	for(var i = 0; i < row; i++)
+		for(var j = 0; j < column; j++)
+			matrix.set(i, j, 0);
+	
+	return matrix;
 }
 
 // Gets data from thebluealliance
