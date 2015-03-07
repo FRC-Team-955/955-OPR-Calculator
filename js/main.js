@@ -119,8 +119,16 @@ function main()
 //			
 //			console.log(str + " || " + teamsMatrix.get(i, 0));
 //		}
+		//trans = teamParticipationMatrix.transp();
+		//cholesky = m4th.ud(trans.mult(teamParticipationMatrix));
+		//scores = cholesky.solve(trans.mult(matchSumMatrix));
+		scores = m4th.lu(teamParticipationMatrix.transp().mult(teamParticipationMatrix)).getInverse().mult(teamParticipationMatrix.transp()).mult(matchSumMatrix);
 		
-		for(var i = 0; i < teamParticipationMatrix.rows; i++)
+		for(var i = 0; i < scores.rows; i++)
+		{
+			console.log(scores.get(i,0));
+		}
+		/*for(var i = 0; i < teamParticipationMatrix.rows; i++)
 		{
 			var str = "";
 
@@ -129,7 +137,7 @@ function main()
 
 			console.log(str + " || " + ((i / 2)+ 1) + " || " + matchSumMatrix.get(i, 1));
 		}
-		
+		*/
 //		console.log(teamsMatrix);
 //		console.log(teamsContainerMatrix);
 //		console.log(teamsToteMatrix);
