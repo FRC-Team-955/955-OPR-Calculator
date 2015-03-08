@@ -1,0 +1,41 @@
+@font-face
+{
+	font-family: orbitron;
+	src: url("../fonts/orbitron/Orbitron-Medium.ttf") format("truetype");
+}
+
+body
+{
+	background-image: url("../images/background.png");
+	font-family: orbitron;
+}
+
+#container
+{
+	width: 100%;
+}
+
+#title
+{
+	text-align: center;
+}
+
+#eventCodeContainer
+{
+	width: 275px;
+	margin: 0 auto;
+}
+
+#eventCodeInput
+{
+	float: left;
+}
+
+#eventCodeButton
+{
+	text-align: center;
+	float: right;
+	width: 100px;
+	height: 21px;
+	background-color: #4d4dff;
+}
