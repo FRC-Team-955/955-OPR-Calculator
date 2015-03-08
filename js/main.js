@@ -175,7 +175,7 @@ function update()
 		
 		var toteCountPR = totePR.times(.5);
 		var teamsTotalsMatrix = teamsAutoMatrix.add(teamsContainerMatrix).add(teamsCoopMatrix).add(teamsLitterMatrix).add(teamsToteMatrix);
-		var foulAdjustedOPR = autoPR.add(containerPR).add(coopPR).add(litterPR).add(totePR);
+		var foulAdjustedOPR = autoPR.add(containerPR).add(litterPR).add(totePR);
 		var overallContributionPercent = M(teamsTotalsMatrix.rows,1);
 		
 		foulPR = overallPR.minus(foulAdjustedOPR);
@@ -208,9 +208,10 @@ function update()
 				"Team #",
 				"Auto OPR",
 				"Bin OPR",
-				"Coop OPR",
 				"Litter OPR",
-				"Tote OPR"
+				"Tote OPR",
+				"Overall Contr %",
+				"Foul ADJ OPR"
 			]
 		];
 		
@@ -226,9 +227,10 @@ function update()
 			teamsMatrix,
 			autoPR,
 			containerPR,
-			coopPR,
 			litterPR,
-			totePR
+			totePR,
+			overallContributionPercent,
+			foulAdjustedOPR
 		];
 		
 		// Multi Dimensional form of
@@ -331,8 +333,8 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 			}
 
 			newCol.classList.add("tableCell");
-			var data = dataTable[i][j];
-			newCol.innerHTML = isNaN(data) ? data : zero(round(data));
+			dataTable[i][j] = isNaN(dataTable[i][j]) ? dataTable[i][j] : zero(round(dataTable[i][j]));
+			newCol.innerHTML = dataTable[i][j];
 			newRow.appendChild(newCol);
 		}
 		
@@ -396,8 +398,8 @@ function downloadData()
 {
 	var str = "";
 	
-	for(var i = 0; i < headerTable; i++)
-		str += headerTable[i] + ",";
+	for(var i = 0; i < headerTable[0].length; i++)
+		str += headerTable[0][i] + ",";
 	
 	str += "\n";
 	
