@@ -1,17 +1,28 @@
-var totalTeams;				// Total teams playing at an event
+var totalTeams = 0;			// Total teams playing at an event
 var matchesPlayed = 0;		// Total matches played at an event
 var M = m4th.matrix;		// Matrix object to spawn more matrices from
-var matchesMatrix;			// Matrix containing team participation	
 var teamsMatrix;			// Matrix containing team numbers
-var teamsContainerMatrix;	// Matrix containing team containers
-var teamsToteMatrix;		// Matrix containing team totes
-var teamParticipationMatrix;// Matrix containing team participation in a match
-var matchSumMatrix;			// Matrix containing match sum
+
+// Data from thebluealliance
 var eventRankingsData;		// Event ranking data
 var matchesData;			// Match data
+
 var teamsIndex = [];		// Team numbers containing indexes
 var dataNeeded = 0;			// Data needed to load
 var dataLoaded = 0;			// Data that has been loaded
+
+// Global Matrixes [A]
+var matchesMatrix;			 	// Matrix containing team participation	
+var teamsParticipationMatrix;	// Matrix containing team participation in a match
+
+// Component Matrixes [b]
+// Auto, Container, Coopertition, Litter, Tote, Match Sum
+var teamsAutoMatrix;
+var teamsContainerMatrix;
+var teamsCoopertitionMatrix;
+var teamsLitterMatrix;
+var teamsToteMatrix;
+var matchSumMatrix;
 
 // Called when the document has been loaded once
 $(document).ready(init);
@@ -46,18 +57,26 @@ function main()
 		// 8: "Played"
 		
 		// Find how many matches were played total at the competition
+		matchesPlayed = 0;
+		
 		for(var i = 0; i < matchesData.length; i++)
 			if(matchesData[i].comp_level === "qm")
 				matchesPlayed++;
 		
-		// Initalized variables
+		// Initalize variables
 		totalTeams = eventRankingsData.length - 1;
-		M = m4th.matrix;
-		matchesMatrix = M(totalTeams, matchesPlayed * 2);
 		teamsMatrix = M(totalTeams, 1);
+		
+		// Global Matrixes [A]
+		matchesMatrix = getEmptyMatrix(totalTeams, matchesPlayed * 2);
+		teamsParticipationMatrix = getEmptyMatrix(matchesPlayed * 2, totalTeams);
+		
+		// Component Matrixes [b]
+		teamsAutoMatrix = M(totalTeams, 1);
 		teamsContainerMatrix = M(totalTeams, 1);
+		teamsCoopertitionMatrix = M(totalTeams, 1);
+		teamsLitterMatrix = M(totalTeams, 1);
 		teamsToteMatrix = M(totalTeams, 1);
-		teamParticipationMatrix = getEmptyMatrix(matchesPlayed * 2, totalTeams);
 		matchSumMatrix = M(matchesPlayed * 2, 1);
 		
 		// Set the teamsMatrix and teamsContainerMatrix
@@ -66,14 +85,13 @@ function main()
 			var teamNumber = eventRankingsData[i][1];					// Get team number
 			teamsIndex[teamNumber] = i - 1;								// Give each team number an teams matrix index
 			teamsMatrix.set(i - 1, 0, teamNumber);						// Set the teams matrix a number
-			teamsContainerMatrix.set(i - 1, 0, eventRankingsData[i][4])	// Set the teams containr matrix a number
-			teamsToteMatrix.set(i - 1, 0, eventRankingsData[i][7])	// Set the teams containr matrix a number
+			
+			teamsAutoMatrix.set(i - 1, 0, eventRankingsData[i][3]);
+			teamsContainerMatrix.set(i - 1, 0, eventRankingsData[i][4]);
+			teamsCoopertitionMatrix.set(i - 1, 0, eventRankingsData[i][5]);
+			teamsLitterMatrix.set(i - 1, 0, eventRankingsData[i][6]);
+			teamsToteMatrix.set(i - 1, 0, eventRankingsData[i][7]);
 		}
-		
-		// Initialize matchesMatrix data to 0
-		for(var i = 0; i < matchesMatrix.rows; i++)
-			for(var j = 0; j < matchesMatrix.columns; j++)
-				matchesMatrix.set(i, j, 0);
 			
 		// Loop through all qualification matches
 		for(var i = 0; i < matchesData.length; i++)
@@ -81,7 +99,6 @@ function main()
 			// Qualification matches only
 			if(matchesData[i].comp_level === "qm")
 			{
-				//console.log(matchesData[i]);
 				// Get match number
 				var matchNumber = matchesData[i].match_number;
 				
@@ -89,31 +106,34 @@ function main()
 				for(var j = 0; j < matchesData[i].alliances.red.teams.length; j++)
 				{
 					var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3));
+					
+					// Global Matrix [A]
 					matchesMatrix.set(teamsIndex[teamNumber], (matchNumber - 1) * 2, 1);
-					teamParticipationMatrix.set((matchNumber - 1) * 2, teamsIndex[teamNumber], 1);
-					//console.log(matchNumber);
+					teamsParticipationMatrix.set((matchNumber - 1) * 2, teamsIndex[teamNumber], 1);
 				}
 				
 				// Loop though blue alliance, set corresponding matrix row column to 1
 				for(var j = 0; j < matchesData[i].alliances.blue.teams.length; j++)
 				{
 					var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3));
+					
+					// Global Matrix [A]
 					matchesMatrix.set(teamsIndex[teamNumber], ((matchNumber - 1) * 2) + 1, 1);
-					teamParticipationMatrix.set(((matchNumber - 1) * 2) + 1, teamsIndex[teamNumber], 1);
-					//console.log(matchNumber);
+					teamsParticipationMatrix.set(((matchNumber - 1) * 2) + 1, teamsIndex[teamNumber], 1);
 				}
 				
-				// Add match sums to matrix
+				// Add match sums to matrix, Component Matrix [b]
 				matchSumMatrix.set((matchNumber - 1) * 2, 0, matchesData[i].alliances.red.score);
 				matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
 			}
 		}
 	}
 }
-//Solves the system [A][B][x] = [b]
+
+// Solves the system [A][B][x] = [b]
 function getComponentOPR(componentMatrix)
 {
-	return m4th.lu(matchesMatrix.mult(teamParticipationMatrix)).getInverse().mult(componentMatrix);
+	return m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse().mult(componentMatrix);
 }
 
 function getEventRankings(data)
