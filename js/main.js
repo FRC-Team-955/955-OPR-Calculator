@@ -104,44 +104,16 @@ function main()
 				}
 				
 				// Add match sums to matrix
-				matchSumMatrix.set((matchNumber - 1) * 2, 1, matchesData[i].alliances.red.score);
-				matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 1, matchesData[i].alliances.blue.score);
+				matchSumMatrix.set((matchNumber - 1) * 2, 0, matchesData[i].alliances.red.score);
+				matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
 			}
 		}
-		
-		// Print matrixs
-//		for(var i = 0; i < matchesMatrix.rows; i++)
-//		{
-//			var str = "";
-//			
-//			for(var j = 0; j < matchesMatrix.columns; j++)
-//				str += matchesMatrix.get(i, j);
-//			
-//			console.log(str + " || " + teamsMatrix.get(i, 0));
-//		}
-		//trans = teamParticipationMatrix.transp();
-		//cholesky = m4th.ud(trans.mult(teamParticipationMatrix));
-		//scores = cholesky.solve(trans.mult(matchSumMatrix));
-		scores = m4th.lu(teamParticipationMatrix.transp().mult(teamParticipationMatrix)).getInverse().mult(teamParticipationMatrix.transp()).mult(matchSumMatrix);
-		
-		for(var i = 0; i < scores.rows; i++)
-		{
-			console.log(scores.get(i,0));
-		}
-		/*for(var i = 0; i < teamParticipationMatrix.rows; i++)
-		{
-			var str = "";
-
-			for(var j = 0; j < teamParticipationMatrix.columns; j++)
-				str += teamParticipationMatrix.get(i, j);
-
-			console.log(str + " || " + ((i / 2)+ 1) + " || " + matchSumMatrix.get(i, 1));
-		}
-		*/
-//		console.log(teamsMatrix);
-//		console.log(teamsContainerMatrix);
-//		console.log(teamsToteMatrix);
 	}
+}
+//Solves the system [A][B][x] = [b]
+function getComponentOPR(componentMatrix)
+{
+	return m4th.lu(matchesMatrix.mult(teamParticipationMatrix)).getInverse().mult(componentMatrix);
 }
 
 function getEventRankings(data)
