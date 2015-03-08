@@ -25,24 +25,32 @@ var teamsLitterMatrix;
 var teamsToteMatrix;
 var matchSumMatrix;
 
+// GUI obj to contain reference to the HTML obj for updating gui wise
+var $gui;
+
 // Called when the document has been loaded once
 $(document).ready(init);
 
-// Init the opr data
-function init() 
+// Called when the document has been loaded
+function init()
 {
-	console.log("Init");
-	getData("event/2015orore/rankings", getEventRankings);
-	getData("event/2015orore/matches", getMatchesData);
-	main();
+	setEvent("orore");
+}
+
+// Set the event to get the opr data from
+function setEvent(eventCode) 
+{
+	getData("event/2015" + eventCode + "/rankings", getEventRankings);
+	getData("event/2015" + eventCode + "/matches", getMatchesData);
+	update();
 }
 
 // The main body of opr scouting
-function main()
+function update()
 {
 	// Wait for all the data to be loaded first
 	if(dataNeeded !== dataLoaded)
-		setTimeout(main, 1000);
+		setTimeout(update, 1000);
 	
 	else
 	{
@@ -130,6 +138,7 @@ function main()
 		}
 		
 		OPRMatrix = m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse();
+		console.log(getOPR());
 	}
 }
 
