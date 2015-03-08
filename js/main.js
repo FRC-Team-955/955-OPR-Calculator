@@ -44,7 +44,7 @@ function update()
 	
 	else
 	{
-		// Array data format
+		// Event rankings data format
 		// 0: "Rank"
 		// 1: "Team"
 		// 2: "Qual Avg"
@@ -59,19 +59,19 @@ function update()
 		var teamsIndex = [];
 		
 		// Find how many matches were played total at the competition
-		var matchesPlayed = 0;
+		var totalMatches = 0;
 		
 		for(var i = 0; i < matchesData.length; i++)
 			if(matchesData[i].comp_level === "qm")
-				matchesPlayed++;
+				totalMatches++;
 		
 		// Initialize variables
 		var totalTeams = eventRankingsData.length - 1;
 		var teamsMatrix = M(totalTeams, 1);
 		
 		// Global Matrices [A]
-		matchesMatrix = getEmptyMatrix(totalTeams, matchesPlayed * 2);
-		teamsParticipationMatrix = getEmptyMatrix(matchesPlayed * 2, totalTeams);
+		matchesMatrix = getEmptyMatrix(totalTeams, totalMatches * 2);
+		teamsParticipationMatrix = getEmptyMatrix(totalMatches * 2, totalTeams);
 		
 		// Component Matrices [b]
 		var teamsAutoMatrix = M(totalTeams, 1);
@@ -79,7 +79,7 @@ function update()
 		var teamsCoopMatrix = M(totalTeams, 1);
 		var teamsLitterMatrix = M(totalTeams, 1);
 		var teamsToteMatrix = M(totalTeams, 1);
-		matchSumMatrix = M(matchesPlayed * 2, 1);
+		matchSumMatrix = M(totalMatches * 2, 1);
 		
 		//OPR matrices
 		var autoPR;
@@ -87,8 +87,8 @@ function update()
 		var coopPR;
 		var litterPR;
 		var totePR;
-		var overallOPR;
-		
+		var overallPR;
+		var foulPR;
 		// Set the teamsMatrix and teamsContainerMatrix
 		for(var i = 1; i < eventRankingsData.length; i++)
 		{
@@ -147,7 +147,34 @@ function update()
 		totePR = getComponentOPR(teamsToteMatrix);
 		
 		// Solves overdetermined system [A][x]=[b] using Cholesky decomposition 
-		overallOPR = m4th.ud(teamsParticipationMatrix.transp().mult(teamsParticipationMatrix)).solve(teamsParticipationMatrix.transp().mult(matchSumMatrix));		
+		overallPR = m4th.ud(teamsParticipationMatrix.transp().mult(teamsParticipationMatrix)).solve(teamsParticipationMatrix.transp().mult(matchSumMatrix));		
+		
+		var toteCountPR = totePR.times(.5);
+		var teamsTotalsMatrix = teamsAutoMatrix.add(teamsContainerMatrix).add(teamsCoopMatrix).add(teamsLitterMatrix).add(teamsToteMatrix);
+		var foulAdjustedOPR = autoPR.add(containerPR).add(coopPR).add(litterPR).add(totePR);
+		var overallContributionPercent = M(teamsTotalsMatrix.rows,1);
+		
+		foulPR = overallPR.minus(foulAdjustedOPR);
+		
+		var autoContributionPercent = M(teamsTotalsMatrix.rows,1);
+		var containerContributionPercent = M(teamsTotalsMatrix.rows,1);
+		var coopContributionPercent = M(teamsTotalsMatrix.rows,1);
+		var litterContributionPercent = M(teamsTotalsMatrix.rows,1);
+		var toteContributionPercent = M(teamsTotalsMatrix.rows,1);
+		
+		//TODO: match strength is the sum of all OPRs in your match history (except you). Carried is whether your contribution is < 33%
+		for(var i = 0; i < teamsTotalsMatrix.rows; i++)
+		{
+			overallContributionPercent.set(i,0,overallPR.get(i,0)/teamsTotalsMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+			
+			autoContributionPercent.set(i,0,autoPR.get(i,0)/teamsAutoMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+			containerContributionPercent.set(i,0,containerPR.get(i,0)/teamsContainerMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+			coopContributionPercent.set(i,0,coopPR.get(i,0)/teamsCoopMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+			litterContributionPercent.set(i,0,litterPR.get(i,0)/teamsLitterMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+			toteContributionPercent.set(i,0,totePR.get(i,0)/teamsToteMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+		}
+		var cappedTotesPR = containerPR.times(.25);
+		var uncappedTotesPR = toteCountPR.minus(cappedTotesPR);
 	}
 }
 
@@ -156,12 +183,6 @@ function update()
 function getComponentOPR(componentMatrix)
 {
 	return OPRMatrix.mult(componentMatrix);
-}
-
-// Gets the tote count from tote opr
-function getToteCount()
-{
-	return getComponentOPR(teamsToteMatrix).times(.5);
 }
 
 // Sets the eventRankingsData
