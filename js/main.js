@@ -7,12 +7,12 @@ var M = m4th.matrix;		// Matrix object to spawn more matrices from
 var dataNeeded = 0;			// Data needed to load
 var dataLoaded = 0;			// Data that has been loaded
 
-// Global Matrixes [A]
+// Global Matrices [A]
 var matchesMatrix;			 	// Matrix containing team participation	
 var teamsParticipationMatrix;	// Matrix containing team participation in a match
-var OPRMatrix;					// Constant Matrix that relates component OPR to conponent matrix
+var OPRMatrix;					// Constant Matrix that relates component OPR to component matrix
 
-// Component Matrixes [b]
+// Component Matrices [b]
 var matchSumMatrix;
 
 // GUI obj to contain reference to the HTML obj for updating gui wise
@@ -65,21 +65,29 @@ function update()
 			if(matchesData[i].comp_level === "qm")
 				matchesPlayed++;
 		
-		// Initalize variables
+		// Initialize variables
 		var totalTeams = eventRankingsData.length - 1;
 		var teamsMatrix = M(totalTeams, 1);
 		
-		// Global Matrixes [A]
+		// Global Matrices [A]
 		matchesMatrix = getEmptyMatrix(totalTeams, matchesPlayed * 2);
 		teamsParticipationMatrix = getEmptyMatrix(matchesPlayed * 2, totalTeams);
 		
-		// Component Matrixes [b]
+		// Component Matrices [b]
 		var teamsAutoMatrix = M(totalTeams, 1);
 		var teamsContainerMatrix = M(totalTeams, 1);
-		var teamsCoopertitionMatrix = M(totalTeams, 1);
+		var teamsCoopMatrix = M(totalTeams, 1);
 		var teamsLitterMatrix = M(totalTeams, 1);
 		var teamsToteMatrix = M(totalTeams, 1);
 		matchSumMatrix = M(matchesPlayed * 2, 1);
+		
+		//OPR matrices
+		var autoPR;
+		var containerPR;
+		var coopPR;
+		var litterPR;
+		var totePR;
+		var overallOPR;
 		
 		// Set the teamsMatrix and teamsContainerMatrix
 		for(var i = 1; i < eventRankingsData.length; i++)
@@ -90,7 +98,7 @@ function update()
 			
 			teamsAutoMatrix.set(i - 1, 0, eventRankingsData[i][3]);
 			teamsContainerMatrix.set(i - 1, 0, eventRankingsData[i][4]);
-			teamsCoopertitionMatrix.set(i - 1, 0, eventRankingsData[i][5]);
+			teamsCoopMatrix.set(i - 1, 0, eventRankingsData[i][5]);
 			teamsLitterMatrix.set(i - 1, 0, eventRankingsData[i][6]);
 			teamsToteMatrix.set(i - 1, 0, eventRankingsData[i][7]);
 		}
@@ -127,26 +135,27 @@ function update()
 				// Add match sums to matrix, Component Matrix [b]
 				matchSumMatrix.set((matchNumber - 1) * 2, 0, matchesData[i].alliances.red.score);
 				matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
-			}
+			}	
 		}
 		
 		OPRMatrix = m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse();
+		
+		autoPR = getComponentOPR(teamsAutoMatrix);
+		containerPR = getComponentOPR(teamsContainerMatrix);
+		coopPR = getComponentOPR(teamsCoopMatrix);
+		litterPR = getComponentOPR(teamsLitterMatrix);
+		totePR = getComponentOPR(teamsToteMatrix);
+		
+		// Solves overdetermined system [A][x]=[b] using Cholesky decomposition 
+		overallOPR = m4th.ud(teamsParticipationMatrix.transp().mult(teamsParticipationMatrix)).solve(teamsParticipationMatrix.transp().mult(matchSumMatrix));		
 	}
 }
 
 // Solves the system [A][B][x] = [b]
+//[A] and [B] are binary matrices representing robot per match and match schedule per robot 
 function getComponentOPR(componentMatrix)
 {
 	return OPRMatrix.mult(componentMatrix);
-}
-
-// Solves overdetermined system [A][x]=[b] using cholesky decomposition 
-function getOPR()
-{
-	//tpm aka teamsParticipationMatrix
-	var tpmTrans = teamsParticipationMatrix.transp();
-	var cholFac = m4th.ud(tpmTrans.mult(teamsParticipationMatrix));
-	return cholFac.solve(tpmTrans.mult(matchSumMatrix));
 }
 
 // Gets the tote count from tote opr
