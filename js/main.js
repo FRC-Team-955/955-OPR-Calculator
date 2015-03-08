@@ -398,7 +398,7 @@ function sortDataTable(e, inc)
 // Rounds the number to the nearest hundreths place
 function round(num)
 {
-	return Math.floor((Math.floor(num * 100) + 0.5)) / 100;
+	return Math.floor((num * 100) + 0.5) / 100;
 }
 
 // If the number is < 0 return 0, else return number
