@@ -15,21 +15,38 @@ var OPRMatrix;					// Constant Matrix that relates component OPR to component ma
 // Component Matrices [b]
 var matchSumMatrix;
 
-// GUI obj to contain reference to the HTML obj for updating gui wise
-var $gui;
+// Contains all gui elements that we'll access frequently
+var $gui = {};
+
+// Whether the event code is valid
+var validEvent = true;
+
+// Data for table
+var headerTable; // Data for header table
+var dataTable;   // Data for data table
+var dataTableInc = true;
 
 // Called when the document has been loaded once
 $(document).ready(init);
 
 // Called when the document has been loaded
 function init()
-{
-	setEvent("orore");
+{	
+	$gui.headerTable = $("#headerTable")[0];
+	$gui.dataTable = $("#dataTable")[0];
+	
+	$("#eventCodeSubmitButton").click(function()
+  	{ 
+		setEvent($("#eventCodeInput").val());
+	});
+	
+	$("#eventCodeDownloadButton").click(downloadData);
 }
 
 // Set the event to get the opr data from
 function setEvent(eventCode) 
 {
+	validEvent = true;
 	getData("event/2015" + eventCode + "/rankings", getEventRankings);
 	getData("event/2015" + eventCode + "/matches", getMatchesData);
 	update();
@@ -38,6 +55,13 @@ function setEvent(eventCode)
 // The main body of opr scouting
 function update()
 {
+	// If invalid event code, dont do anything
+	if(!validEvent)
+	{
+		alert("Wrong Code!");
+		return;
+	}
+	
 	// Wait for all the data to be loaded first
 	if(dataNeeded !== dataLoaded)
 		setTimeout(update, 1000);
@@ -175,6 +199,53 @@ function update()
 		}
 		var cappedTotesPR = containerPR.times(.25);
 		var uncappedTotesPR = toteCountPR.minus(cappedTotesPR);
+		
+		// Header for table
+		headerTable =
+		[
+			[
+				"Rank",
+				"Team #",
+				"Auto OPR",
+				"Bin OPR",
+				"Coop OPR",
+				"Litter OPR",
+				"Tote OPR"
+			]
+		];
+		
+		var rankingMatrix = M(totalTeams, 1);
+		
+		for(var i = 0; i < totalTeams; i++)
+			rankingMatrix.set(i, 0, i + 1);
+		
+		// Data for table
+		var dataMatrix = 
+		[
+			rankingMatrix,
+			teamsMatrix,
+			autoPR,
+			containerPR,
+			coopPR,
+			litterPR,
+			totePR
+		];
+		
+		// Multi Dimensional form of
+		dataTable = [[]];
+		
+		// Row
+		for(var i = 0; i < dataMatrix[0].rows; i++)
+		{
+			dataTable[i] = [];
+			
+			// Column
+			for(var j = 0; j < dataMatrix.length; j++)
+				dataTable[i][j] = dataMatrix[j].get(i, 0);
+		}
+		
+		makeTable($gui.headerTable, headerTable, true, true);
+		makeTable($gui.dataTable, dataTable, false, false);
 	}
 }
 
@@ -224,7 +295,128 @@ function getData(key, callback)
 		},
 		error:function()
 		{
-			callback(null);
+			validEvent = false;
 		} 
 	});
+}
+
+// Makes a table in the gui
+function makeTable(table, dataTable, startDark, firstRowBolded)
+{
+	var $tableContainer = table;
+	var $table = document.createElement("table");
+	$table.setAttribute("id", "table");
+	$table.classList.add("table");
+
+	// Row
+	for(var i = 0; i < dataTable.length; i++)
+	{
+		var newRow = document.createElement("tr");
+
+		if((startDark && i % 2 == 0) || (!startDark && i % 2 != 0))
+			newRow.classList.add("darkGray");
+
+		newRow.classList.add("tableRow");
+
+		// Column
+		for(var j = 0; j < dataTable[i].length; j++)
+		{
+			var newCol = document.createElement("td");
+
+			if(i === 0 && firstRowBolded)
+			{
+				newCol = document.createElement("th");
+				newCol.classList.add("tableCellHeader");
+				newCol.id = j;
+			}
+
+			newCol.classList.add("tableCell");
+			var data = dataTable[i][j];
+			newCol.innerHTML = isNaN(data) ? data : zero(round(data));
+			newRow.appendChild(newCol);
+		}
+		
+		$table.appendChild(newRow);
+	}
+
+	$tableContainer.innerHTML = $table.outerHTML;
+	
+	if(firstRowBolded)
+		$(".tableCellHeader").click(sortDataTable);
+}
+
+// Sorts data table
+function sortDataTable(e, inc)
+{	
+	if(dataTable.length <= 1)
+		return;
+	
+	var colIndex = e.target.id;
+	dataTableInc = !dataTableInc;
+	
+	while(true)
+	{
+		var sorted = true;
+		
+		for(var i = 0; i < dataTable.length - 1; i++)
+		{
+			if((dataTableInc && dataTable[i][colIndex] < dataTable[i + 1][colIndex]) || (!dataTableInc && dataTable[i][colIndex] > dataTable[i + 1][colIndex]))
+			{
+				var tmp = dataTable[i];
+				dataTable[i] = dataTable[i + 1];
+				dataTable[i + 1] = tmp;
+				sorted = false;
+			}
+		}
+		
+		if(sorted)
+			break;
+	}
+	
+	makeTable($gui.dataTable, dataTable, false, false);
+}
+
+// Rounds the number to the nearest hundreths place
+function round(num)
+{
+	return Math.floor((Math.floor(num * 100) + 0.5)) / 100;
+}
+
+// If the number is < 0 return 0, else return number
+function zero(num)
+{
+	if(num < 0)
+		return 0;
+	
+	return num;
+}
+
+// Downloads the opr data the user is currently viewing
+function downloadData()
+{
+	var str = "";
+	
+	for(var i = 0; i < headerTable; i++)
+		str += headerTable[i] + ",";
+	
+	str += "\n";
+	
+	for(var i = 0; i < dataTable.length; i++)
+	{
+		for(var j = 0; j < dataTable[i].length; j++)
+			str += dataTable[i][j] + ",";
+		
+		str += "\n";
+	}
+	
+	saveFile("oprData.csv", str);
+}
+
+// Saves the file to the users computer
+function saveFile(fileName, fileData)
+{
+	var e = document.createElement('a');
+	e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(fileData));
+	e.setAttribute('download', fileName);
+	e.click();
 }

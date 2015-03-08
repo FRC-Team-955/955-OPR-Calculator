@@ -10,6 +10,16 @@ body
 	font-family: orbitron;
 }
 
+#header
+{
+	background-image: url("../images/background.png");
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	height: 190px;
+	z-index: 1;
+}
+
 #title
 {
 	text-align: center;
@@ -45,4 +55,61 @@ body
 	height: 21px;
 	margin-left: 10px;
 	background-color: #4d4dff;
+}
+
+/* Table */
+.lightGray
+{
+	background-color: rgb(222, 222, 222);
+}
+
+.gray
+{
+	background-color: rgb(204, 204, 204);
+}
+
+.darkGray
+{
+	background-color: #dfdfdf;
+}
+
+#headerTable
+{
+	width: 1200px;
+	position: absolute;
+	margin: 0 auto;
+	left: -18px;
+	right: 0px;
+	top: 150px;
+}
+
+#dataTable
+{
+	width: 1200px;
+	position: absolute;
+	margin: 0 auto;
+	left: 0px;
+	right: 0px;
+	margin-top: 185px;
+}
+
+.table
+{
+/*	border-collapse: collapse*/
+}
+
+.tableRow
+{
+	text-align: center;
+}
+
+.tableCell
+{
+	width: 200px;
+	height: 30px;
+}
+
+.tableCellHeader
+{
+	font-weight: bold;
 }
