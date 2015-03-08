@@ -1,13 +1,9 @@
-var totalTeams = 0;			// Total teams playing at an event
-var matchesPlayed = 0;		// Total matches played at an event
-var M = m4th.matrix;		// Matrix object to spawn more matrices from
-var teamsMatrix;			// Matrix containing team numbers
-
 // Data from thebluealliance
 var eventRankingsData;		// Event ranking data
 var matchesData;			// Match data
 
-var teamsIndex = [];		// Team numbers containing indexes
+// Variables
+var M = m4th.matrix;		// Matrix object to spawn more matrices from
 var dataNeeded = 0;			// Data needed to load
 var dataLoaded = 0;			// Data that has been loaded
 
@@ -17,12 +13,6 @@ var teamsParticipationMatrix;	// Matrix containing team participation in a match
 var OPRMatrix;					// Constant Matrix that relates component OPR to conponent matrix
 
 // Component Matrixes [b]
-// Auto, Container, Coopertition, Litter, Tote, Match Sum
-var teamsAutoMatrix;
-var teamsContainerMatrix;
-var teamsCoopertitionMatrix;
-var teamsLitterMatrix;
-var teamsToteMatrix;
 var matchSumMatrix;
 
 // GUI obj to contain reference to the HTML obj for updating gui wise
@@ -65,27 +55,30 @@ function update()
 		// 7: "Tote"
 		// 8: "Played"
 		
+		// Team numbers containing indexes
+		var teamsIndex = [];
+		
 		// Find how many matches were played total at the competition
-		matchesPlayed = 0;
+		var matchesPlayed = 0;
 		
 		for(var i = 0; i < matchesData.length; i++)
 			if(matchesData[i].comp_level === "qm")
 				matchesPlayed++;
 		
 		// Initalize variables
-		totalTeams = eventRankingsData.length - 1;
-		teamsMatrix = M(totalTeams, 1);
+		var totalTeams = eventRankingsData.length - 1;
+		var teamsMatrix = M(totalTeams, 1);
 		
 		// Global Matrixes [A]
 		matchesMatrix = getEmptyMatrix(totalTeams, matchesPlayed * 2);
 		teamsParticipationMatrix = getEmptyMatrix(matchesPlayed * 2, totalTeams);
 		
 		// Component Matrixes [b]
-		teamsAutoMatrix = M(totalTeams, 1);
-		teamsContainerMatrix = M(totalTeams, 1);
-		teamsCoopertitionMatrix = M(totalTeams, 1);
-		teamsLitterMatrix = M(totalTeams, 1);
-		teamsToteMatrix = M(totalTeams, 1);
+		var teamsAutoMatrix = M(totalTeams, 1);
+		var teamsContainerMatrix = M(totalTeams, 1);
+		var teamsCoopertitionMatrix = M(totalTeams, 1);
+		var teamsLitterMatrix = M(totalTeams, 1);
+		var teamsToteMatrix = M(totalTeams, 1);
 		matchSumMatrix = M(matchesPlayed * 2, 1);
 		
 		// Set the teamsMatrix and teamsContainerMatrix
@@ -138,7 +131,6 @@ function update()
 		}
 		
 		OPRMatrix = m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse();
-		console.log(getOPR());
 	}
 }
 
