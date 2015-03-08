@@ -136,6 +136,16 @@ function getComponentOPR(componentMatrix)
 	return m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse().mult(componentMatrix);
 }
 
+
+//Solves overdetermined system [A][x]=[b] using cholesky decomposition 
+function getOPR()
+{
+	//tpm aka teamsParticipationMatrix
+	tpmTrans = teamsParticipationMatrix.transp();
+	cholFac = m4th.ud(tpmTrans.mult(teamsParticipationMatrix));
+	return cholFac.solve(tpmTrans.mult(matchSumMatrix));
+}
+
 function getEventRankings(data)
 {
 	eventRankingsData = data;
