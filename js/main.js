@@ -34,10 +34,25 @@ function init()
 {	
 	$gui.headerTable = $("#headerTable")[0];
 	$gui.dataTable = $("#dataTable")[0];
+	$gui.eventCodeInput = $("#eventCodeInput");
+	$gui.eventCodeSubmitButton = $("#eventCodeSubmitButton");
 	
-	$("#eventCodeSubmitButton").click(function()
+	$gui.eventCodeInput.focus();
+	
+	$gui.eventCodeSubmitButton.click(function()
   	{ 
-		setEvent($("#eventCodeInput").val());
+		$gui.eventCodeInput.blur();
+		setEvent($gui.eventCodeInput.val());
+	});
+	
+	$(window).keydown(function(e)
+ 	{
+		if(e.keyCode === 13) // Enter
+		{
+			$gui.eventCodeSubmitButton.click();
+			e.preventDefault();
+			return;
+		}
 	});
 	
 	$("#eventCodeDownloadButton").click(downloadData);
@@ -249,6 +264,8 @@ function update()
 		makeTable($gui.headerTable, headerTable, true, true);
 		makeTable($gui.dataTable, dataTable, false, false);
 	}
+	
+	$gui.eventCodeInput.focus();
 }
 
 // Solves the system [A][B][x] = [b]

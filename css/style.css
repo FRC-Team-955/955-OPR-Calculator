@@ -14,8 +14,14 @@ body
 {
 	background-image: url("../images/background.png");
 	position: fixed;
-	top: 0px;
 	width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+	top: 0px;
+	left: 0xp;
+	right: 0px;
 	height: 190px;
 	z-index: 1;
 }
@@ -78,7 +84,7 @@ body
 	width: 1200px;
 	position: absolute;
 	margin: 0 auto;
-	left: -18px;
+	left: 0px;
 	right: 0px;
 	top: 150px;
 }
@@ -105,7 +111,7 @@ body
 
 .tableCell
 {
-	width: 200px;
+	width: 150px;
 	height: 30px;
 }
 
