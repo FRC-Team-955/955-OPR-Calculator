@@ -131,21 +131,10 @@ function main()
 }
 
 // Solves the system [A][B][x] = [b]
-//[A] and [B] are binary matrices representing match schedule and robots in the match
 function getComponentOPR(componentMatrix)
 {
 	return m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse().mult(componentMatrix);
 }
-
-//Solves overdetermined system [A][x]=[b] using cholesky decomposition 
-function getOPR()
-{
-	//tpm aka teamParticipationMatrix
-	tpmTrans = teamParticipationMatrix.transp();
-	cholFac = m4th.ud(tpmTrans.mult(teamParticipationMatrix));
-	return tpmCholFac.solve(tpmTrans.mult(matchSumMatrix));
-}
-
 
 function getEventRankings(data)
 {
