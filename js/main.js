@@ -62,6 +62,13 @@ function init()
 function setEvent(eventCode) 
 {
 	validEvent = true;
+	dataNeeded = 0;
+	dataLoaded = 0;
+	eventCode = eventCode.toLowerCase();
+	
+	if(eventCode === "txda")
+		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
+	
 	getData("event/2015" + eventCode + "/rankings", getEventRankings);
 	getData("event/2015" + eventCode + "/matches", getMatchesData);
 	update();
