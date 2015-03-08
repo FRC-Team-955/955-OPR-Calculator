@@ -14,6 +14,7 @@ var dataLoaded = 0;			// Data that has been loaded
 // Global Matrixes [A]
 var matchesMatrix;			 	// Matrix containing team participation	
 var teamsParticipationMatrix;	// Matrix containing team participation in a match
+var OPRMatrix;					// Constant Matrix that relates component OPR to conponent matrix
 
 // Component Matrixes [b]
 // Auto, Container, Coopertition, Litter, Tote, Match Sum
@@ -127,35 +128,45 @@ function main()
 				matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
 			}
 		}
+		
+		OPRMatrix = m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse();
 	}
 }
 
 // Solves the system [A][B][x] = [b]
 function getComponentOPR(componentMatrix)
 {
-	return m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse().mult(componentMatrix);
+	return OPRMatrix.mult(componentMatrix);
 }
 
-
-//Solves overdetermined system [A][x]=[b] using cholesky decomposition 
+// Solves overdetermined system [A][x]=[b] using cholesky decomposition 
 function getOPR()
 {
 	//tpm aka teamsParticipationMatrix
-	tpmTrans = teamsParticipationMatrix.transp();
-	cholFac = m4th.ud(tpmTrans.mult(teamsParticipationMatrix));
+	var tpmTrans = teamsParticipationMatrix.transp();
+	var cholFac = m4th.ud(tpmTrans.mult(teamsParticipationMatrix));
 	return cholFac.solve(tpmTrans.mult(matchSumMatrix));
 }
 
+// Gets the tote count from tote opr
+function getToteCount()
+{
+	return getComponentOPR(teamsToteMatrix).times(.5);
+}
+
+// Sets the eventRankingsData
 function getEventRankings(data)
 {
 	eventRankingsData = data;
 }
 
+// Sets the matchesData
 function getMatchesData(data)
 {
 	matchesData = data;
 }
 
+// Returns a matrix row by column filled with 0s
 function getEmptyMatrix(row, column)
 {
 	var matrix = M(row, column);
