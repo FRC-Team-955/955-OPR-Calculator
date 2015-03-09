@@ -97,7 +97,7 @@ body
 
 #headerTable
 {
-	width: 1350px;
+	width: 1200px;
 	position: absolute;
 	margin: 0 auto;
 	left: 0px;
@@ -108,7 +108,7 @@ body
 #dataTable
 {
 	font-family: lato; 
-	width: 1350px;
+	width: 1200px;
 	position: absolute;
 	margin: 0 auto;
 	left: 0px;
@@ -128,7 +128,7 @@ body
 
 .tableCell
 {
-	width: 150px;
+	width: 133.33px;
 	height: 30px;
 }
 

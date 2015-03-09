@@ -220,7 +220,7 @@ function update()
 			"Coop OPR",
 			"Litter OPR",
 			"Tote OPR",
-			"Overall Contr %",
+			"Contr %",
 			"Foul ADJ OPR"
 		]
 	];
