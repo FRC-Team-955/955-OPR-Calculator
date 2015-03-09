@@ -23,6 +23,23 @@ body
 	user-select: none;
 }
 
+.ui-autocomplete 
+{
+	z-index: 9999 !important;
+	width: 350px;
+}
+
+.ui-state-focus
+{
+	font-style: italic;
+	font-weight: bolder;
+}
+
+.ui-helper-hidden-accessible
+{
+	display: none;
+}
+
 #header
 {
 	background-image: url("../images/background.png");
@@ -47,14 +64,14 @@ body
 
 #eventCodeContainer
 {
-	width: 370px;
+	width: 465px;
 	margin: 0 auto;
 }
 
 #eventCodeInput
 {
 	float: left;
-	width: 125px;
+	width: 222px;
 }
 
 #eventCodeSubmitButton

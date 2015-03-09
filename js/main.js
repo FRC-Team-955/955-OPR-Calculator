@@ -1,3 +1,25 @@
+// All the event names
+var eventNames = 
+[
+	"Central Valley Regional",
+	"Greater Toronto Central Regional",
+	"Arkansas Rock City Regional",
+	"Mexico City Regional",
+	"Greater Pittsburgh Regional",
+	"Israel Regional"
+];
+
+// All the event codes
+var eventCodes =
+[
+	"cama",
+	"onto2",
+	"arfa",
+	"mxmc",
+	"papi",
+	"ista"
+];
+
 // Data from thebluealliance
 var eventRankingsData;		// Event ranking data
 var matchesData;			// Match data
@@ -37,6 +59,11 @@ function init()
 	$gui.eventCodeInput = $("#eventCodeInput");
 	$gui.eventCodeSubmitButton = $("#eventCodeSubmitButton");
 	
+	$gui.eventCodeInput.autocomplete(
+	{
+		source: eventNames.concat(eventCodes)
+	});
+	
 	$gui.eventCodeInput.focus();
 	
 	$gui.eventCodeSubmitButton.click(function()
@@ -65,6 +92,10 @@ function setEvent(eventCode)
 	dataNeeded = 0;
 	dataLoaded = 0;
 	eventCode = eventCode.toLowerCase();
+	
+	for(var i = 0; i < eventNames.length; i++)
+		if(eventNames[i].toLowerCase() === eventCode)
+			eventCode = eventCodes[i];
 	
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
