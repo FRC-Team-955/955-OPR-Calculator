@@ -28,6 +28,8 @@ body
 	z-index: 9999 !important;
 	width: 350px;
 	background-color: white;
+	list-style: none;
+	padding-left: 20px;
 }
 
 .ui-state-focus
