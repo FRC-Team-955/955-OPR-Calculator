@@ -51,13 +51,18 @@ function init()
 		open: function() 
 		{ 
 			var elms = $(".ui-menu-item");
-			var biggestLength = 0;
+			var width = 0;
 			
 			for(var i = 0; i < elms.length; i++)
-				if(elms[i].innerText.length > biggestLength)
-					biggestLength = elms[i].innerText.length;
+			{
+				var newWidth = getTextWidth(elms[i].innerText, "orbitron");
+				
+				if(newWidth > width)
+					width = newWidth;
+			}
 			
-			$(".ui-autocomplete").css("width", (biggestLength * 9.55) + "px");
+			width *= 2;
+			$(".ui-autocomplete").css("width", width + "px");
 		} 
 	});
 	
@@ -459,6 +464,23 @@ function saveFile(fileName, fileData)
 	e.click();
 }
 
+/**
+ * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+ * 
+ * @param {String} text The text to be rendered.
+ * @param {String} font The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+ * 
+ * @see http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+ */
+function getTextWidth(text, font) {
+	// re-use canvas object for better performance
+	var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+	var context = canvas.getContext("2d");
+	context.font = font;
+	var metrics = context.measureText(text);
+	return metrics.width;
+};
+
 // Gets all the events for 2015 Recycle Rush, for debugging/updating the event names/codes
 function getAllEvents()
 {
@@ -482,7 +504,6 @@ function getAllEvents()
 	
 	dataNeeded = 0;
 }
-
 
 // Sets the eventNames and eventCodes variables
 function setEventNamesAndCodes()
