@@ -47,10 +47,24 @@ function init()
 	$gui.eventCodeInput.autocomplete(
 	{
 		source: eventNames,
-		minLength: 3
+		minLength: 3,
+		open: function() 
+		{ 
+			var elms = $(".ui-menu-item");
+			var biggestLength = 0;
+			
+			for(var i = 0; i < elms.length; i++)
+				if(elms[i].innerText.length > biggestLength)
+					biggestLength = elms[i].innerText.length;
+			
+			$(".ui-autocomplete").css("width", (biggestLength * 9.55) + "px");
+		} 
 	});
 	
-	$gui.eventCodeInput.focus();
+	$gui.eventCodeInput.focus(function()
+  	{
+		this.select();
+	});
 	
 	$gui.eventCodeSubmitButton.click(function()
   	{ 
@@ -69,6 +83,7 @@ function init()
 	});
 	
 	$("#eventCodeDownloadButton").click(downloadData);
+	$gui.eventCodeInput.focus();
 }
 
 // Set the event to get the opr data from
