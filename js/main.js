@@ -1,24 +1,8 @@
 // All the event names
-var eventNames = 
-[
-	"Central Valley Regional",
-	"Greater Toronto Central Regional",
-	"Arkansas Rock City Regional",
-	"Mexico City Regional",
-	"Greater Pittsburgh Regional",
-	"Israel Regional"
-];
+var eventNames;
 
 // All the event codes
-var eventCodes =
-[
-	"cama",
-	"onto2",
-	"arfa",
-	"mxmc",
-	"papi",
-	"ista"
-];
+var eventCodes;
 
 // Data from thebluealliance
 var eventRankingsData;		// Event ranking data
@@ -54,6 +38,7 @@ $(document).ready(init);
 // Called when the document has been loaded
 function init()
 {	
+	setEventNamesAndCodes();
 	$gui.headerTable = $("#headerTable")[0];
 	$gui.dataTable = $("#dataTable")[0];
 	$gui.eventCodeInput = $("#eventCodeInput");
@@ -101,8 +86,8 @@ function setEvent(eventCode)
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
 	
-	getData("event/2015" + eventCode + "/rankings", getEventRankings);
-	getData("event/2015" + eventCode + "/matches", getMatchesData);
+	getData("event/2015" + eventCode + "/rankings", function(data){ eventRankingsData = data; });
+	getData("event/2015" + eventCode + "/matches", function(data){ matchesData = data; });
 	$gui.eventCodeInput.focus();
 }
 
@@ -300,18 +285,6 @@ function getComponentOPR(componentMatrix)
 	return OPRMatrix.mult(componentMatrix);
 }
 
-// Sets the eventRankingsData
-function getEventRankings(data)
-{
-	eventRankingsData = data;
-}
-
-// Sets the matchesData
-function getMatchesData(data)
-{
-	matchesData = data;
-}
-
 // Returns a matrix row by column filled with 0s
 function getEmptyMatrix(row, column)
 {
@@ -469,4 +442,263 @@ function saveFile(fileName, fileData)
 	e.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(fileData));
 	e.setAttribute('download', fileName);
 	e.click();
+}
+
+// Gets all the events for 2015 Recycle Rush, for debugging/updating the event names/codes
+function getAllEvents()
+{
+	getData("events/2015", function(events)
+	{ 
+		console.log(events); 
+		
+		var strEventNames = "";
+		var strEventCodes = "";
+		
+		for(var i = 0; i < events.length; i++)
+		{
+			eventNames[i] = events[i].name;
+			strEventNames += '"' + events[i].name + '",\n';
+			eventCodes[i] = events[i].event_code;
+			strEventCodes += '"' + events[i].event_code + '",\n';
+		}
+		
+		saveFile("eventNamesAndCodes.txt", strEventNames + "\n" + strEventCodes);
+	});
+	
+	dataNeeded = 0;
+}
+
+
+// Sets the eventNames and eventCodes variables
+function setEventNamesAndCodes()
+{
+	eventNames = 
+	[
+		"Western Canada Regional",
+		"Arkansas Rock City Regional",
+		"Australia Regional",
+		"Arizona East Regional",
+		"Arizona West Regional",
+		"Los Angeles Regional sponsored by The Roddenberry Foundation",
+		"Central Valley Regional",
+		"Inland Empire Regional",
+		"Sacramento Regional",
+		"San Diego Regional",
+		"Silicon Valley Regional",
+		"Ventura Regional",
+		"Colorado Regional",
+		"NE District - Hartford Event",
+		"Suffield Shakedown",
+		"NE District - Waterbury Event",
+		"Greater DC Regional",
+		"South Florida Regional",
+		"Orlando Regional",
+		"Peachtree Regional",
+		"Georgia Southern Classic Regional",
+		"Hawaii Regional",
+		"Midwest Regional",
+		"Central Illinois Regional",
+		"Indiana FIRST District Championship",
+		"IN District - Indianapolis Event",
+		"IN District - Kokomo City of Firsts Event sponsored by AndyMark",
+		"IN District - Purdue Event",
+		"Israel Regional",
+		"Bayou Regional",
+		"NE District - Northeastern University Event",
+		"NE District - UMass - Dartmouth Event",
+		"NE District - Reading Event",
+		"NE District - Pioneer Valley Event",
+		"Chesapeake Regional",
+		"NE District - Pine Tree Event",
+		"FIM District - Bedford Event",
+		"FIM District - Center Line Event",
+		"FIRST in Michigan District Championship",
+		"FIM District - Escanaba Event",
+		"FIM District - Woodhaven Event",
+		"FIM District - Gull Lake Event",
+		"FIM District - Howell Event",
+		"FIM District - Kentwood Event",
+		"FIM District - Kettering University Event",
+		"FIM District - Lansing Event",
+		"FIM District - Livonia Event",
+		"FIM District - Great Lakes Bay Region Event",
+		"FIM District - St. Joseph Event",
+		"FIM District - Southfield Event",
+		"FIM District - Standish Event",
+		"FIM District - Troy Event",
+		"FIM District - Traverse City Event",
+		"FIM District - Waterford Event",
+		"FIM District - West Michigan Event",
+		"Lake Superior Regional",
+		"Northern Lights Regional",
+		"Minnesota 10000 Lakes Regional",
+		"Minnesota North Star Regional",
+		"Greater Kansas City Regional",
+		"St. Louis Regional",
+		"Mid-Atlantic Robotics District Championship",
+		"Mexico City Regional",
+		"North Carolina Regional",
+		"NE FIRST District Championship presented by United Technologies",
+		"NE District - UNH Event",
+		"NE District - Granite State Event",
+		"Week Zero",
+		"MAR District - Bridgewater-Raritan Event",
+		"MAR District - Mt. Olive Event",
+		"MAR District - North Brunswick Event",
+		"MAR District - Seneca Event",
+		"Las Vegas Regional",
+		"SBPLI Long Island Regional",
+		"New York City Regional",
+		"Finger Lakes Regional",
+		"New York Tech Valley Regional",
+		"Queen City Regional",
+		"Buckeye Regional",
+		"Oklahoma Regional",
+		"North Bay Regional",
+		"Greater Toronto East Regional",
+		"Greater Toronto Central Regional",
+		"Waterloo Regional",
+		"Windsor Essex Great Lakes Regional",
+		"PNW District - Oregon City Event",
+		"PNW District - Philomath Event",
+		"PNW District - Wilsonville Event",
+		"MAR District - Upper Darby Event",
+		"MAR District - Hatboro-Horsham Event",
+		"MAR District - Springside Chestnut Hill Event",
+		"Greater Pittsburgh Regional",
+		"Pacific Northwest District Championship",
+		"FRC Festival de Robotique - Montreal Regional",
+		"NE District - Rhode Island Event",
+		"Palmetto Regional",
+		"Smoky Mountains Regional",
+		"Dallas Regional",
+		"Lone Star Regional",
+		"Hub City Regional",
+		"Alamo Regional sponsored by Rackspace Hosting",
+		"Utah Regional",
+		"Virginia Regional",
+		"PNW District - Auburn Event",
+		"PNW District - Auburn Mountainview Event",
+		"PNW District - Central Washington University Event",
+		"PNW District - Mount Vernon Event",
+		"PNW District - Shorewood Event",
+		"PNW District - Glacier Peak Event",
+		"PNW District - West Valley Event",
+		"Wisconsin Regional"
+	];
+	
+	eventCodes = 
+	[
+		"abca",
+		"arfa",
+		"ausy",
+		"azch",
+		"azpx",
+		"calb",
+		"cama",
+		"carm",
+		"casa",
+		"casd",
+		"casj",
+		"cave",
+		"code",
+		"cthar",
+		"ctss",
+		"ctwat",
+		"dcwa",
+		"flfo",
+		"flor",
+		"gadu",
+		"gape",
+		"hiho",
+		"ilch",
+		"ilil",
+		"incmp",
+		"inind",
+		"inkok",
+		"inwla",
+		"ista",
+		"lake",
+		"mabos",
+		"manda",
+		"marea",
+		"maspr",
+		"mdcp",
+		"melew",
+		"mibed",
+		"micen",
+		"micmp",
+		"miesc",
+		"mifla",
+		"migul",
+		"mihow",
+		"miken",
+		"miket",
+		"milan",
+		"miliv",
+		"mimid",
+		"misjo",
+		"misou",
+		"mista",
+		"mitry",
+		"mitvc",
+		"miwat",
+		"miwmi",
+		"mndu",
+		"mndu2",
+		"mnmi",
+		"mnmi2",
+		"mokc",
+		"mosl",
+		"mrcmp",
+		"mxmc",
+		"ncre",
+		"necmp",
+		"nhdur",
+		"nhnas",
+		"nhwz",
+		"njbri",
+		"njfla",
+		"njnbr",
+		"njtab",
+		"nvlv",
+		"nyli",
+		"nyny",
+		"nyro",
+		"nytr",
+		"ohci",
+		"ohcl",
+		"okok",
+		"onnb",
+		"onto",
+		"onto2",
+		"onwa",
+		"onwi",
+		"orore",
+		"orphi",
+		"orwil",
+		"padre",
+		"pahat",
+		"paphi",
+		"papi",
+		"pncmp",
+		"qcmo",
+		"rismi",
+		"scmb",
+		"tnkn",
+		"txda",
+		"txho",
+		"txlu",
+		"txsa",
+		"utwv",
+		"vari",
+		"waahs",
+		"waamv",
+		"waell",
+		"wamou",
+		"washo",
+		"wasno",
+		"waspo",
+		"wimi"
+	];
 }
