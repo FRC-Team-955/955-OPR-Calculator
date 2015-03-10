@@ -61,7 +61,7 @@ function init()
 	
 	$gui.eventCodeInput.autocomplete(
 	{
-		source: eventNames.concat(eventCodes)
+		source: eventNames
 	});
 	
 	$gui.eventCodeInput.focus();

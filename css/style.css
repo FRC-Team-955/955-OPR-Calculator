@@ -27,6 +27,7 @@ body
 {
 	z-index: 9999 !important;
 	width: 350px;
+	background-color: white;
 }
 
 .ui-state-focus
