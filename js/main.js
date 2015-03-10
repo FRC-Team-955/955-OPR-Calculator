@@ -61,7 +61,8 @@ function init()
 	
 	$gui.eventCodeInput.autocomplete(
 	{
-		source: eventNames
+		source: eventNames,
+		minLength: 3
 	});
 	
 	$gui.eventCodeInput.focus();
