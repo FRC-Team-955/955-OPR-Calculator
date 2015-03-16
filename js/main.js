@@ -157,6 +157,22 @@ function setTeam(teamNumber)
 		matchesData[i] = getData("event/2015" + teamEvents[i].event_code + "/matches");
 	}
 	
+	for(var i = 0; i < teamEvents.length - 1; i++)
+	{
+		if(eventRankingsData[i].length < eventRankingsData[i + 1].length)
+		{
+			var tmp = eventRankingsData[i];
+			eventRankingsData[i] = eventRankingsData[i + 1];
+			eventRankingsData[i + 1] = tmp;
+			tmp = matchesData[i];
+			matchesData[i] = matchesData[i + 1];
+			matchesData[i + 1] = tmp;
+			tmp = teamEvents[i];
+			teamEvents[i] = teamEvents[i + 1];
+			teamEvents[i + 1] = tmp;
+		}
+	}
+	
 	var header = 
 	[[
 		"Event Code",
