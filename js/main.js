@@ -140,8 +140,14 @@ function init()
 		}
 	});
 	
+	window.onpopstate = processURLParameter;
 	$("#eventCodeDownloadButton").click(downloadData);
 	$gui.eventCodeInput.focus();
+	processURLParameter();
+}
+
+function processURLParameter()
+{
 	var urlParams = decodeURI(window.location.search).substring(1).split("&");
 	
 	for(var i = 0; i < urlParams.length; i++)
@@ -185,6 +191,7 @@ function setEvent(eventCode)
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
 	
+	window.history.pushState("", "", "?search=" + eventCode);
 	teamMode = false;
 	eventMode = true;
 	var eventRankingsData = getData("event/2015" + eventCode + "/rankings");
@@ -199,6 +206,7 @@ function setEvent(eventCode)
 
 function setTeam(teamNumber)
 {
+	window.history.pushState("", "", "?search=" + teamNumber);
 	teamMode = true;
 	eventMode = false;
 	var eventRankingsData = [];
