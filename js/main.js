@@ -98,7 +98,18 @@ function init()
 		{
 			if(keyVal[0].toLowerCase() === "search")
 			{
-				$gui.eventCodeInput.val(keyVal[1]);
+				var val = keyVal[1].toLowerCase();
+				
+				for(var j = 0; j < eventCodes.length; j++)
+				{
+					if(val === eventCodes[j])
+					{
+						val = eventNames[j];
+						break;
+					}
+				}
+				
+				$gui.eventCodeInput.val(val);
 				$gui.eventCodeSubmitButton.click();
 			}
 		}
@@ -444,7 +455,7 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 	$(".button.tableSearchQuery").click(function()
 	{
 		var begParamI = document.URL.indexOf("?");
-		window.open(document.URL.substring(0, begParamI) + "?search=" + this.innerHTML);
+		window.open(document.URL.substring(0, begParamI) + "?search=" + this.innerHTML.toLowerCase());
 	});
 }
 
