@@ -5,8 +5,11 @@ var eventNames;
 var eventCodes;
 
 // Data from thebluealliance
-var eventRankingsData;		// Event ranking data
-var matchesData;			// Match data
+var eventRankingsData = [];		// Event ranking data
+var matchesData = [];			// Match data
+
+// Team number for getting data for
+var teamNumber = 0;
 
 // Variables
 var M = m4th.matrix;		// Matrix object to spawn more matrices from
@@ -74,7 +77,13 @@ function init()
 	$gui.eventCodeSubmitButton.click(function()
   	{ 
 		$gui.eventCodeInput.blur();
-		setEvent($gui.eventCodeInput.val());
+		var input = $gui.eventCodeInput.val();
+		
+		if(isNaN(input))
+			setEvent(input);
+		
+		else
+			setTeam(parseInt(input));
 	});
 	
 	$(window).keydown(function(e)
@@ -95,8 +104,10 @@ function init()
 function setEvent(eventCode) 
 {
 	errorShownAlready = false;
-	dataNeeded = 0;
+	dataNeeded = 2;
 	dataLoaded = 0;
+	eventRankingsData = [];
+	matchesData = [];
 	eventCode = eventCode.toLowerCase();
 	
 	for(var i = 0; i < eventNames.length; i++)
@@ -106,13 +117,111 @@ function setEvent(eventCode)
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
 	
-	getData("event/2015" + eventCode + "/rankings", function(data){ eventRankingsData = data; });
-	getData("event/2015" + eventCode + "/matches", function(data){ matchesData = data; });
+	getData("event/2015" + eventCode + "/rankings", function(data)
+	{
+		eventRankingsData[0] = data; 
+		eventDataLoaded(); 
+	});
+	getData("event/2015" + eventCode + "/matches", function(data)
+	{
+		matchesData[0] = data; 
+		eventDataLoaded();
+	});
+	
 	$gui.eventCodeInput.focus();
 }
 
+function eventDataLoaded()
+{
+	if(++dataLoaded === dataNeeded)
+	{
+		var table = update(eventRankingsData[0], matchesData[0]);
+		headerTable = table.header;
+		dataTable = table.data;
+		makeTable($gui.headerTable, table.header, true, true);
+		makeTable($gui.dataTable, table.data, false, false);
+	}
+}
+
+function setTeam(newTeamNumber)
+{
+	errorShownAlready = false;
+	teamNumber = newTeamNumber;
+	eventRankingsData = [];
+	matchesData = [];
+	
+	getData("team/frc" + teamNumber + "/2015/events", function(data)
+	{
+		teamEventsAttendingLoaded(data);
+	});
+}
+
+function teamEventsAttendingLoaded(teamEvents)
+{
+	dataNeeded = teamEvents.length * 2;
+	dataLoaded = 0;
+	var eventRankingI = 0;
+	var matchesDataI = 0;
+	
+	for(var i = 0; i < teamEvents.length; i++)
+	{
+		getData("event/2015" + teamEvents[i].event_code + "/rankings", function(data)
+		{
+			eventRankingsData[eventRankingI++] = data; 
+			allTeamDataLoaded(teamEvents); 
+		});
+		getData("event/2015" + teamEvents[i].event_code + "/matches", function(data)
+		{
+			matchesData[matchesDataI++] = data; 
+			allTeamDataLoaded(teamEvents);
+		});
+	}
+}
+
+function allTeamDataLoaded(teamEvents)
+{
+	if(++dataLoaded === dataNeeded)
+	{
+		var header = 
+		[[
+			"Event Code",
+			"Rank",
+			"Auto OPR",
+			"Bin OPR",
+			"Coop OPR",
+			"Litter OPR",
+			"Tote OPR",
+			"Contribution %",
+			"Foul ADJ OPR"	
+		]];
+		
+		var data = [];
+		
+		for(var i = 0; i < dataNeeded / 2; i++)
+		{
+			var table = update(eventRankingsData[i], matchesData[i]);
+			
+			for(var j = 0; j < table.data.length; j++)
+				if(table.data[j][1] === teamNumber)
+					data.push(table.data[j]);
+		}
+		
+		// Row
+		for(var i = 0; i < data.length; i++)
+		{
+			data[i][1] = data[i][0];
+			data[i][0] = teamEvents[i].event_code.toUpperCase();
+		}
+			
+		headerTable = header;
+		dataTable = data;
+		makeTable($gui.headerTable, headerTable, true, true);
+		makeTable($gui.dataTable, dataTable, false, false);
+	}
+}
+
 // The main body of opr scouting
-function update()
+function update(newEventRankingsData, newMatchesData)
 {
 	// Event rankings data format
 	// 0: "Rank"
@@ -131,12 +240,12 @@ function update()
 	// Find how many matches were played total at the competition
 	var totalMatches = 0;
 
-	for(var i = 0; i < matchesData.length; i++)
-		if(matchesData[i].comp_level === "qm")
+	for(var i = 0; i < newMatchesData.length; i++)
+		if(newMatchesData[i].comp_level === "qm")
 			totalMatches++;
 
 	// Initialize variables
-	var totalTeams = eventRankingsData.length - 1;
+	var totalTeams = newEventRankingsData.length - 1;
 	var teamsMatrix = M(totalTeams, 1);
 
 	// Global Matrices [A]
@@ -160,32 +269,32 @@ function update()
 	var overallPR;
 	var foulPR;
 	// Set the teamsMatrix and teamsContainerMatrix
-	for(var i = 1; i < eventRankingsData.length; i++)
+	for(var i = 1; i < newEventRankingsData.length; i++)
 	{
-		var teamNumber = eventRankingsData[i][1];					// Get team number
+		var teamNumber = newEventRankingsData[i][1];					// Get team number
 		teamsIndex[teamNumber] = i - 1;								// Give each team number an teams matrix index
 		teamsMatrix.set(i - 1, 0, teamNumber);						// Set the teams matrix a number
 
-		teamsAutoMatrix.set(i - 1, 0, eventRankingsData[i][3]);
-		teamsContainerMatrix.set(i - 1, 0, eventRankingsData[i][4]);
-		teamsCoopMatrix.set(i - 1, 0, eventRankingsData[i][5]);
-		teamsLitterMatrix.set(i - 1, 0, eventRankingsData[i][6]);
-		teamsToteMatrix.set(i - 1, 0, eventRankingsData[i][7]);
+		teamsAutoMatrix.set(i - 1, 0, newEventRankingsData[i][3]);
+		teamsContainerMatrix.set(i - 1, 0, newEventRankingsData[i][4]);
+		teamsCoopMatrix.set(i - 1, 0, newEventRankingsData[i][5]);
+		teamsLitterMatrix.set(i - 1, 0, newEventRankingsData[i][6]);
+		teamsToteMatrix.set(i - 1, 0, newEventRankingsData[i][7]);
 	}
 
 	// Loop through all qualification matches
-	for(var i = 0; i < matchesData.length; i++)
+	for(var i = 0; i < newMatchesData.length; i++)
 	{
 		// Qualification matches only
-		if(matchesData[i].comp_level === "qm")
+		if(newMatchesData[i].comp_level === "qm")
 		{
 			// Get match number
-			var matchNumber = matchesData[i].match_number;
+			var matchNumber = newMatchesData[i].match_number;
 
 			// Loop though red alliance, set corresponding matrix row column to 1
-			for(var j = 0; j < matchesData[i].alliances.red.teams.length; j++)
+			for(var j = 0; j < newMatchesData[i].alliances.red.teams.length; j++)
 			{
-				var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3));
+				var teamNumber =  parseInt(newMatchesData[i].alliances.red.teams[j].substr(3));
 
 				// Global Matrix [A]
 				matchesMatrix.set(teamsIndex[teamNumber], (matchNumber - 1) * 2, 1);
@@ -193,9 +302,9 @@ function update()
 			}
 
 			// Loop though blue alliance, set corresponding matrix row column to 1
-			for(var j = 0; j < matchesData[i].alliances.blue.teams.length; j++)
+			for(var j = 0; j < newMatchesData[i].alliances.blue.teams.length; j++)
 			{
-				var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3));
+				var teamNumber =  parseInt(newMatchesData[i].alliances.blue.teams[j].substr(3));
 
 				// Global Matrix [A]
 				matchesMatrix.set(teamsIndex[teamNumber], ((matchNumber - 1) * 2) + 1, 1);
@@ -203,8 +312,8 @@ function update()
 			}
 
 			// Add match sums to matrix, Component Matrix [b]
-			matchSumMatrix.set((matchNumber - 1) * 2, 0, matchesData[i].alliances.red.score);
-			matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
+			matchSumMatrix.set((matchNumber - 1) * 2, 0, newMatchesData[i].alliances.red.score);
+			matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, newMatchesData[i].alliances.blue.score);
 		}	
 	}
 
@@ -235,13 +344,13 @@ function update()
 	//TODO: match strength is the sum of all OPRs in your match history (except you). Carried is whether your contribution is < 33%
 	for(var i = 0; i < teamsTotalsMatrix.rows; i++)
 	{
-		overallContributionPercent.set(i,0,overallPR.get(i,0)/teamsTotalsMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+		overallContributionPercent.set(i,0,overallPR.get(i,0)/teamsTotalsMatrix.get(i,0)*newEventRankingsData[i+1][8]*100);
 
-		autoContributionPercent.set(i,0,autoPR.get(i,0)/teamsAutoMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
-		containerContributionPercent.set(i,0,containerPR.get(i,0)/teamsContainerMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
-		coopContributionPercent.set(i,0,coopPR.get(i,0)/teamsCoopMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
-		litterContributionPercent.set(i,0,litterPR.get(i,0)/teamsLitterMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
-		toteContributionPercent.set(i,0,totePR.get(i,0)/teamsToteMatrix.get(i,0)*eventRankingsData[i+1][8]*100);
+		autoContributionPercent.set(i,0,autoPR.get(i,0)/teamsAutoMatrix.get(i,0)*newEventRankingsData[i+1][8]*100);
+		containerContributionPercent.set(i,0,containerPR.get(i,0)/teamsContainerMatrix.get(i,0)*newEventRankingsData[i+1][8]*100);
+		coopContributionPercent.set(i,0,coopPR.get(i,0)/teamsCoopMatrix.get(i,0)*newEventRankingsData[i+1][8]*100);
+		litterContributionPercent.set(i,0,litterPR.get(i,0)/teamsLitterMatrix.get(i,0)*newEventRankingsData[i+1][8]*100);
+		toteContributionPercent.set(i,0,totePR.get(i,0)/teamsToteMatrix.get(i,0)*newEventRankingsData[i+1][8]*100);
 	}
 	var cappedTotesPR = containerPR.times(.25);
 	var uncappedTotesPR = toteCountPR.minus(cappedTotesPR);
@@ -293,9 +402,8 @@ function update()
 		for(var j = 0; j < dataMatrix.length; j++)
 			dataTable[i][j] = dataMatrix[j].get(i, 0);
 	}
-
-	makeTable($gui.headerTable, headerTable, true, true);
-	makeTable($gui.dataTable, dataTable, false, false);
+	
+	return { header: headerTable, data: dataTable };
 }
 
 // Solves the system [A][B][x] = [b]
@@ -320,17 +428,12 @@ function getEmptyMatrix(row, column)
 // Gets data from thebluealliance
 function getData(key, callback)
 {
-	dataNeeded++;
-	
 	$.ajax
 	({
 		url:"http://www.thebluealliance.com/api/v2/" + key + "?X-TBA-App-Id=frc955:opr-system:v01",
 		success:function(data)
 		{
 			callback(data);
-			
-			if(++dataLoaded === dataNeeded)
-				update();
 		},
 		error:function()
 		{
