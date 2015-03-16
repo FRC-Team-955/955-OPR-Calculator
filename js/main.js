@@ -36,15 +36,65 @@ function init()
 {	
 	setEventNamesAndCodes();
 	setTeamNames();
+	
+	var autoCompleteSource = [];
+	
+	for(var i = 0; i < eventNames.length; i++)
+		autoCompleteSource.push({ label: eventNames[i], category: "Events" });
+	
+	for(var i = 0; i < teamNames.length; i++)
+		autoCompleteSource.push({ label: (i + 1) + " | " + teamNames[i], category: "Teams" });
+		
 	$gui.headerTable = $("#headerTable")[0];
 	$gui.dataTable = $("#dataTable")[0];
 	$gui.eventCodeInput = $("#eventCodeInput");
 	$gui.eventCodeSubmitButton = $("#eventCodeSubmitButton");
 	
-	$gui.eventCodeInput.autocomplete(
+	$.widget( "custom.catcomplete", $.ui.autocomplete, 
+ 	{
+		_create: function() 
+		{
+		  this._super();
+		  this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+		},
+		_renderMenu: function( ul, items ) 
+		{
+	  		var that = this,
+			currentCategory = "";
+  			
+			$.each(items, function(index, item) 
+		   	{
+				var li;
+				
+				if(item.category != currentCategory) 
+				{
+			  		ul.append("<li class='ui-autocomplete-category'>" + item.category + "</li>");
+			  		currentCategory = item.category;
+				}
+				
+				li = that._renderItemData(ul, item);
+			});
+		}
+  	});
+	
+	$gui.eventCodeInput.catcomplete(
 	{
-		source: eventNames,
-		minLength: 3,
+		source: function(request, response) {
+			var results = $.ui.autocomplete.filter(autoCompleteSource, request.term);
+
+			var predicate = function () {
+				var counter = { Teams: 0, Events: 0 };
+				var fn = function(item) {
+					counter[item.category] += 1;
+					return (counter[item.category] <= 5);
+				}
+				return fn
+			}();
+
+			response(results.filter(predicate));
+		},
+		minLength: 1,
+		delay: 500,
 		open: function() 
 		{ 
 			var elms = $(".ui-menu-item");
@@ -73,11 +123,11 @@ function init()
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		
-		if(isNaN(input))
-			setEvent(input);
+		if(parseInt(input))
+			setTeam(parseInt(input));
 		
 		else
-			setTeam(parseInt(input));
+			setEvent(input);
 	});
 	
 	$(window).keydown(function(e)
@@ -104,14 +154,18 @@ function init()
 			{
 				var val = keyVal[1].toLowerCase();
 				
-				for(var j = 0; j < eventCodes.length; j++)
-				{
-					if(val === eventCodes[j])
+				if(parseInt(val))
+					val += " | " + teamNames[parseInt(val) - 1];
+				
+				else
+					for(var j = 0; j < eventCodes.length; j++)
 					{
-						val = eventNames[j];
-						break;
+						if(val === eventCodes[j])
+						{
+							val = eventNames[j];
+							break;
+						}
 					}
-				}
 				
 				$gui.eventCodeInput.val(val);
 				$gui.eventCodeInput.prop({ selectionStart: 0, selectionEnd: 0 });
@@ -157,20 +211,29 @@ function setTeam(teamNumber)
 		matchesData[i] = getData("event/2015" + teamEvents[i].event_code + "/matches");
 	}
 	
-	for(var i = 0; i < teamEvents.length - 1; i++)
+	while(true)
 	{
-		if(eventRankingsData[i].length < eventRankingsData[i + 1].length)
+		var sorted = true;
+		
+		for(var i = 0; i < teamEvents.length - 1; i++)
 		{
-			var tmp = eventRankingsData[i];
-			eventRankingsData[i] = eventRankingsData[i + 1];
-			eventRankingsData[i + 1] = tmp;
-			tmp = matchesData[i];
-			matchesData[i] = matchesData[i + 1];
-			matchesData[i + 1] = tmp;
-			tmp = teamEvents[i];
-			teamEvents[i] = teamEvents[i + 1];
-			teamEvents[i + 1] = tmp;
+			if(eventRankingsData[i].length < eventRankingsData[i + 1].length)
+			{
+				var tmp = eventRankingsData[i];
+				eventRankingsData[i] = eventRankingsData[i + 1];
+				eventRankingsData[i + 1] = tmp;
+				tmp = matchesData[i];
+				matchesData[i] = matchesData[i + 1];
+				matchesData[i + 1] = tmp;
+				tmp = teamEvents[i];
+				teamEvents[i] = teamEvents[i + 1];
+				teamEvents[i + 1] = tmp;
+				sorted = false;
+			}
 		}
+		
+		if(sorted)
+			break;
 	}
 	
 	var header = 
