@@ -102,6 +102,16 @@ body
 	background-color: #840204;
 }
 
+.button:hover
+{
+	opacity: 0.75;
+}
+
+.button:active
+{
+	opacity: 0.5;
+}
+
 /* Table */
 .lightGray
 {
@@ -160,9 +170,4 @@ body
 {
 	font-weight: bold;
 	font-size: 14px;
-}
-
-.tableCellHeader:hover
-{
-	opacity: .75;
 }

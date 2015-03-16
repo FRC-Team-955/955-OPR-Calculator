@@ -66,7 +66,7 @@ function init()
 		} 
 	});
 	
-	$gui.eventCodeInput.focus(function()
+	$gui.eventCodeInput.click(function()
   	{
 		this.select();
 	});
@@ -370,6 +370,7 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 			{
 				newCol = document.createElement("th");
 				newCol.classList.add("tableCellHeader");
+				newCol.classList.add("button");
 				newCol.id = j;
 			}
 
