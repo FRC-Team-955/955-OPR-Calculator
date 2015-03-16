@@ -22,6 +22,8 @@ var $gui = {};
 var headerTable; // Data for header table
 var dataTable;   // Data for data table
 var dataTableInc = true;
+var teamMode = false;
+var eventMode = false;
 
 // Called when the document has been loaded once
 $(document).ready(init);
@@ -86,8 +88,21 @@ function init()
 	
 	$("#eventCodeDownloadButton").click(downloadData);
 	$gui.eventCodeInput.focus();
+	var urlParams = decodeURI(window.location.search).substring(1).split("&");
 	
-	console.log(window.location.search);
+	for(var i = 0; i < urlParams.length; i++)
+	{
+		var keyVal = urlParams[i].split("=");
+		
+		if(keyVal.length >= 1)
+		{
+			if(keyVal[0].toLowerCase() === "search")
+			{
+				$gui.eventCodeInput.val(keyVal[1]);
+				$gui.eventCodeSubmitButton.click();
+			}
+		}
+	}
 }
 
 // Set the event to get the opr data from
@@ -100,6 +115,8 @@ function setEvent(eventCode)
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
 	
+	teamMode = false;
+	eventMode = true;
 	var eventRankingsData = getData("event/2015" + eventCode + "/rankings");
 	var matchesData = getData("event/2015" + eventCode + "/matches");
 	var table = update(eventRankingsData, matchesData);
@@ -112,6 +129,8 @@ function setEvent(eventCode)
 
 function setTeam(teamNumber)
 {
+	teamMode = true;
+	eventMode = false;
 	var eventRankingsData = [];
 	var matchesData = [];
 	var teamEvents = getData("team/frc" + teamNumber + "/2015/events");
@@ -157,6 +176,7 @@ function setTeam(teamNumber)
 	dataTable = data;
 	makeTable($gui.headerTable, headerTable, true, true);
 	makeTable($gui.dataTable, dataTable, false, false);
+	$gui.eventCodeInput.focus();
 }
 
 // The main body of opr scouting
@@ -400,7 +420,13 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 				newCol.classList.add("button");
 				newCol.id = j;
 			}
-
+			
+			else if((teamMode && j === 0) || (eventMode && j === 1))
+			{
+				newCol.classList.add("button");
+				newCol.classList.add("tableSearchQuery");
+			}
+			
 			newCol.classList.add("tableCell");
 			dataTable[i][j] = isNaN(dataTable[i][j]) ? dataTable[i][j] : zero(round(dataTable[i][j]));
 			newCol.innerHTML = dataTable[i][j];
@@ -414,6 +440,12 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 	
 	if(firstRowBolded)
 		$(".tableCellHeader").click(sortDataTable);
+	
+	$(".button.tableSearchQuery").click(function()
+	{
+		var begParamI = document.URL.indexOf("?");
+		window.open(document.URL.substring(0, begParamI) + "?search=" + this.innerHTML);
+	});
 }
 
 // Sorts data table
