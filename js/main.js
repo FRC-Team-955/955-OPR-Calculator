@@ -110,6 +110,7 @@ function init()
 				}
 				
 				$gui.eventCodeInput.val(val);
+				$gui.eventCodeInput.prop({ selectionStart: 0, selectionEnd: 0 });
 				$gui.eventCodeSubmitButton.click();
 			}
 		}
