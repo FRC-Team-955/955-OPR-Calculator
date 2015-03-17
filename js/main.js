@@ -94,7 +94,7 @@ function init()
 			response(results.filter(predicate));
 		},
 		minLength: 1,
-		delay: 500,
+		delay: 0,
 		open: function() 
 		{ 
 			var elms = $(".ui-menu-item");
@@ -120,6 +120,12 @@ function init()
 	
 	$gui.eventCodeSubmitButton.click(function()
   	{ 
+		window.setTimeout(function()
+	  	{
+			$gui.eventCodeInput.css("cursor", "progress");
+			$("html,body").css("cursor", "progress");
+		}, 0);
+		
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		
@@ -128,6 +134,15 @@ function init()
 		
 		else
 			setEvent(input);
+		
+		makeTable($gui.headerTable, headerTable, true, true);
+		makeTable($gui.dataTable, dataTable, false, false);
+		$gui.eventCodeInput.focus();
+		window.setTimeout(function()
+	  	{
+			$gui.eventCodeInput.css("cursor", "default");
+			$("html,body").css("cursor", "default");
+		}, 1000);
 	});
 	
 	$(window).keydown(function(e)
@@ -199,9 +214,6 @@ function setEvent(eventCode)
 	var table = update(eventRankingsData, matchesData);
 	headerTable = table.header;
 	dataTable = table.data;
-	makeTable($gui.headerTable, table.header, true, true);
-	makeTable($gui.dataTable, table.data, false, false);
-	$gui.eventCodeInput.focus();
 }
 
 function setTeam(teamNumber)
@@ -277,9 +289,6 @@ function setTeam(teamNumber)
 
 	headerTable = header;
 	dataTable = data;
-	makeTable($gui.headerTable, headerTable, true, true);
-	makeTable($gui.dataTable, dataTable, false, false);
-	$gui.eventCodeInput.focus();
 }
 
 // The main body of opr scouting
