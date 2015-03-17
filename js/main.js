@@ -109,7 +109,7 @@ function init()
 			}
 			
 			width *= 2;
-			$(".ui-autocomplete").css("width", width + "px");
+			$(".ui-autocomplete").css("width", (width + 10) + "px");
 		} 
 	});
 	
