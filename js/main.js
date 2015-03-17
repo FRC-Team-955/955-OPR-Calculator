@@ -22,8 +22,8 @@ var matchSumMatrix;
 var $gui = {};
 
 // Data for table
-var headerTable; // Data for header table
-var dataTable;   // Data for data table
+var headerTable = []; // Data for header table
+var dataTable = [];   // Data for data table
 var dataTableInc = true;
 var teamMode = false;
 var eventMode = false;
@@ -131,11 +131,16 @@ function init()
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		var intInput = parseInt(input, 10);
 		
-		if(intInput)
-			setTeam(intInput);
+		try
+		{
+			if(intInput)
+				setTeam(intInput);
+
+			else
+				setEvent(input);
+		}
 		
-		else
-			setEvent(input);
+		catch(e){}
 		
 		makeTable($gui.headerTable, headerTable, true, true);
 		makeTable($gui.dataTable, dataTable, false, false);
