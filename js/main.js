@@ -43,7 +43,8 @@ function init()
 		autoCompleteSource.push({ label: eventNames[i], category: "Events" });
 	
 	for(var i = 0; i < teamNames.length; i++)
-		autoCompleteSource.push({ label: (i + 1) + " | " + teamNames[i], category: "Teams" });
+		if(teamNames[i])
+			autoCompleteSource.push({ label: (i + 1) + " | " + teamNames[i], category: "Teams" });
 		
 	$gui.headerTable = $("#headerTable")[0];
 	$gui.dataTable = $("#dataTable")[0];
@@ -128,9 +129,10 @@ function init()
 		
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
+		var intInput = parseInt(input, 10);
 		
-		if(parseInt(input))
-			setTeam(parseInt(input));
+		if(intInput)
+			setTeam(intInput);
 		
 		else
 			setEvent(input);
@@ -174,9 +176,11 @@ function processURLParameter()
 			if(keyVal[0].toLowerCase() === "search")
 			{
 				var val = keyVal[1].toLowerCase();
+				var intVal = parseInt(val, 10);
 				
-				if(parseInt(val))
-					val += " | " + teamNames[parseInt(val) - 1];
+				if(intVal)
+					if(teamNames[intVal - 1])
+						val += " | " + teamNames[intVal - 1];
 				
 				else
 					for(var j = 0; j < eventCodes.length; j++)
@@ -364,7 +368,7 @@ function update(eventRankingsData, matchesData)
 			// Loop though red alliance, set corresponding matrix row column to 1
 			for(var j = 0; j < matchesData[i].alliances.red.teams.length; j++)
 			{
-				var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3));
+				var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3), 10);
 
 				// Global Matrix [A]
 				matchesMatrix.set(teamsIndex[teamNumber], (matchNumber - 1) * 2, 1);
@@ -374,7 +378,7 @@ function update(eventRankingsData, matchesData)
 			// Loop though blue alliance, set corresponding matrix row column to 1
 			for(var j = 0; j < matchesData[i].alliances.blue.teams.length; j++)
 			{
-				var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3));
+				var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3), 10);
 
 				// Global Matrix [A]
 				matchesMatrix.set(teamsIndex[teamNumber], ((matchNumber - 1) * 2) + 1, 1);
@@ -546,7 +550,7 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 				}
 				
 				else if(eventMode)
-					newCol.setAttribute("title", teamNames[parseInt(dataTable[i][j]) - 1]);
+					newCol.setAttribute("title", teamNames[parseInt(dataTable[i][j], 10) - 1]);
 			}
 			
 			newCol.classList.add("tableCell");
@@ -691,10 +695,7 @@ function getAllTeamNames()
 		teamDatas = teamDatas.concat(getData("teams/" + i));
 	
 	for(var i = 0; i < teamDatas.length; i++)
-	{
-		//console.log(teamDatas[i].key.substring(3) + teamDatas[i].nickname);
-		teamNames[parseInt(teamDatas[i].key.substring(3)) - 1] = teamDatas[i].nickname ? teamDatas[i].nickname : "";
-	}
+		teamNames[parseInt(teamDatas[i].key.substring(3), 10) - 1] = teamDatas[i].nickname || "";
 	
 	for(var i = 0; i < teamNames.length; i++)
 	{
