@@ -1,13 +1,20 @@
 @font-face
 {
 	font-family: orbitron;
-	src: url("../fonts/orbitron/Orbitron-Medium.ttf") format("truetype");
+	src: url("../fonts/orbitron/Orbitron-Medium.woff") format("woff");
+}
+
+@font-face
+{
+	font-family: orbitron;
+	font-weight: bold;
+	src: url("../fonts/orbitron/Orbitron-Bold.woff") format("woff");
 }
 
 @font-face
 {
 	font-family: lato;
-	src: url("../fonts/lato/Lato-Medium.ttf");
+	src: url("../fonts/lato/Lato-Medium.woff") format("woff");
 }
 
 body
@@ -83,6 +90,7 @@ body
 
 #eventCodeInput
 {
+	font-family: lato; 
 	float: left;
 	width: 222px;
 }
