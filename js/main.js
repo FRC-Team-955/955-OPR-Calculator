@@ -225,27 +225,20 @@ function setTeam(teamNumber)
 	var matchesData = [];
 	var teamEvents = getData("team/frc" + teamNumber + "/2015/events");
 	
-	for(var i = 0; i < teamEvents.length; i++)
-	{
-		eventRankingsData[i] = getData("event/2015" + teamEvents[i].event_code + "/rankings");
-		matchesData[i] = getData("event/2015" + teamEvents[i].event_code + "/matches");
-	}
-	
 	while(true)
 	{
 		var sorted = true;
 		
 		for(var i = 0; i < teamEvents.length - 1; i++)
 		{
-			if(eventRankingsData[i].length < eventRankingsData[i + 1].length)
+			var currDate = teamEvents[i].start_date.split("-");
+			currDate = new Date(currDate[0], currDate[1], currDate[2]);
+			var nextDate = teamEvents[i + 1].start_date.split("-");
+			nextDate = new Date(nextDate[0], nextDate[1], nextDate[2]);
+			
+			if(currDate > nextDate)
 			{
-				var tmp = eventRankingsData[i];
-				eventRankingsData[i] = eventRankingsData[i + 1];
-				eventRankingsData[i + 1] = tmp;
-				tmp = matchesData[i];
-				matchesData[i] = matchesData[i + 1];
-				matchesData[i + 1] = tmp;
-				tmp = teamEvents[i];
+				var tmp = teamEvents[i];
 				teamEvents[i] = teamEvents[i + 1];
 				teamEvents[i + 1] = tmp;
 				sorted = false;
@@ -254,6 +247,12 @@ function setTeam(teamNumber)
 		
 		if(sorted)
 			break;
+	}
+	
+	for(var i = 0; i < teamEvents.length; i++)
+	{
+		eventRankingsData[i] = getData("event/2015" + teamEvents[i].event_code + "/rankings");
+		matchesData[i] = getData("event/2015" + teamEvents[i].event_code + "/matches");
 	}
 	
 	var header = 
