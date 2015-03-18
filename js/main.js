@@ -228,6 +228,42 @@ function setEvent(eventCode)
 	var eventRankingsData = getData("event/2015" + eventCode + "/rankings");
 	var matchesData = getData("event/2015" + eventCode + "/matches");
 	var table = update(eventRankingsData, matchesData);
+	
+	if(table.data[0].length === 0)
+	{
+		var teamsAtEvent = getData("event/2015" + eventCode + "/teams");
+		
+		for(var i = 0; i < teamsAtEvent.length; i++)
+		{
+			var newData = [];
+			
+			for(var j = 0; j < table.header[0].length; j++)
+				newData[j] = "N/A";
+			
+			newData[1] = teamsAtEvent[i].team_number;
+			table.data[i] = newData;
+		}
+		
+		while(true)
+		{
+			var sorted = true;
+			
+			for(var i = 0; i < table.data.length - 1; i++)
+			{
+				if(table.data[i][1] > table.data[i + 1][1])
+				{
+					var tmp = table.data[i];
+					table.data[i] = table.data[i + 1];
+					table.data[i + 1] = tmp;
+					sorted = false;
+				}
+			}
+			
+			if(sorted)
+				break;
+		}
+	}
+		
 	headerTable = table.header;
 	dataTable = table.data;
 }
@@ -291,10 +327,17 @@ function setTeam(teamNumber)
 	for(var i = 0; i < eventRankingsData.length; i++)
 	{
 		var table = update(eventRankingsData[i], matchesData[i]);
-
+		var newData = [];
+		
 		for(var j = 0; j < table.data.length; j++)
 			if(table.data[j][1] === teamNumber)
-				data.push(table.data[j]);
+				newData = table.data[j];
+		
+		if(newData.length === 0)
+			for(var j = 0; j < header[0].length; j++)
+				newData[j] = "N/A";
+				
+		data.push(newData);
 	}
 
 	// Row
