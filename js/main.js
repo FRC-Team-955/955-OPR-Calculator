@@ -27,6 +27,7 @@ var dataTable = [];   // Data for data table
 var dataTableInc = true;
 var teamMode = false;
 var eventMode = false;
+var appendToHistory = true;
 
 // Called when the document has been loaded once
 $(document).ready(init);
@@ -161,7 +162,13 @@ function init()
 		}
 	});
 	
-	window.onpopstate = processURLParameter;
+	window.onpopstate = function(e)
+	{	
+		appendToHistory = false;
+		processURLParameter();
+		appendToHistory = true;
+	}
+	
 	$("#eventCodeDownloadButton").click(downloadData);
 	$gui.eventCodeInput.focus();
 	processURLParameter();
@@ -213,7 +220,9 @@ function setEvent(eventCode)
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
 	
-	window.history.pushState("", "", "?search=" + eventCode);
+	if(appendToHistory)
+		window.history.pushState("", "", "?search=" + eventCode);
+	
 	teamMode = false;
 	eventMode = true;
 	var eventRankingsData = getData("event/2015" + eventCode + "/rankings");
@@ -225,7 +234,9 @@ function setEvent(eventCode)
 
 function setTeam(teamNumber)
 {
-	window.history.pushState("", "", "?search=" + teamNumber);
+	if(appendToHistory)
+		window.history.pushState("", "", "?search=" + teamNumber);
+	
 	teamMode = true;
 	eventMode = false;
 	var eventRankingsData = [];
