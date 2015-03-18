@@ -32,6 +32,7 @@ body
 
 .ui-autocomplete 
 {
+	font-size: 16px;
 	z-index: 9999 !important;
 	width: 350px;
 	background-color: white;

@@ -103,14 +103,13 @@ function init()
 			
 			for(var i = 0; i < elms.length; i++)
 			{
-				var newWidth = getTextWidth(elms[i].innerText, "orbitron");
+				var newWidth = getTextWidth(elms[i].innerHTML, "16px orbitron");
 				
 				if(newWidth > width)
 					width = newWidth;
 			}
 			
-			width *= 2;
-			$(".ui-autocomplete").css("width", (width + 10) + "px");
+			$(".ui-autocomplete").css("width", (width + 13) + "px");
 		} 
 	});
 	
