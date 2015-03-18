@@ -182,9 +182,8 @@ function processURLParameter()
 				var val = keyVal[1].toLowerCase();
 				var intVal = parseInt(val, 10);
 				
-				if(intVal)
-					if(teamNames[intVal - 1])
-						val += " | " + teamNames[intVal - 1];
+				if(intVal && teamNames[intVal - 1])
+					val += " | " + teamNames[intVal - 1];
 				
 				else
 					for(var j = 0; j < eventCodes.length; j++)
