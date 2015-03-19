@@ -120,43 +120,33 @@ function init()
 	});
 	
 	$gui.eventCodeSubmitButton.click(function()
-  	{ 
-		$gui.eventCodeInput.css("cursor", "progress");
-		$("html,body").css("cursor", "progress");
-		window.setTimeout(function()
-	  	{		
-			$gui.eventCodeInput.blur();
-			var input = $gui.eventCodeInput.val().toLowerCase();
-			var intInput = parseInt(input, 10);
-			var table = null;
-			
-			try
-			{
-				if(intInput)
-					table = setTeam(intInput);
+  	{
+		$gui.eventCodeInput.blur();
+		var input = $gui.eventCodeInput.val().toLowerCase();
+		var intInput = parseInt(input, 10);
+		var table = null;
 
-				else
-					table = setEvent(input);
-			}
+		try
+		{
+			if(intInput)
+				table = setTeam(intInput);
 
-			catch(e){}
-			
-			if(table !== null)
-			{
-				if(appendToHistory)
-					window.history.pushState("", "", "?search=" + table.search);
-				
-				makeTable($gui.headerTable, headerTable = table.header, true, true);
-				makeTable($gui.dataTable, dataTable = table.data, false, false);
-			}
-			
-			$gui.eventCodeInput.focus();
-			window.setTimeout(function()
-			{
-				$gui.eventCodeInput.css("cursor", "default");
-				$("html,body").css("cursor", "default");
-			}, 1);
-		}, 1);
+			else
+				table = setEvent(input);
+		}
+
+		catch(e){}
+
+		if(table !== null)
+		{
+			if(appendToHistory)
+				window.history.pushState("", "", "?search=" + table.search);
+
+			makeTable($gui.headerTable, headerTable = table.header, true, true);
+			makeTable($gui.dataTable, dataTable = table.data, false, false);
+		}
+
+		$gui.eventCodeInput.focus();
 	});
 	
 	$(window).keydown(function(e)
