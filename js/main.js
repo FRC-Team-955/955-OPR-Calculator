@@ -22,9 +22,7 @@ var matchSumMatrix;
 var $gui = {};
 
 // Data for table
-var headerTable = []; // Data for header table
-var dataTable = [];   // Data for data table
-var dataTableInc = true;
+var tableData = { header: [], data: [], dataInc: true };
 var tableModes = { team: 0, event: 1, teamsAttending: 2 };
 var currTableMode;
 var appendToHistory = true;
@@ -142,8 +140,8 @@ function init()
 			if(appendToHistory)
 				window.history.pushState("", "", "?search=" + table.search);
 
-			makeTable($gui.headerTable, headerTable = table.header, true, true);
-			makeTable($gui.dataTable, dataTable = table.data, false, false);
+			makeTable($gui.headerTable, tableData.header = table.header, true, true);
+			makeTable($gui.dataTable, tableData.data = table.data, false, false);
 		}
 
 		$gui.eventCodeInput.focus();
@@ -659,23 +657,26 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 // Sorts data table
 function sortDataTable(e, inc)
 {	
-	if(dataTable.length <= 1)
+	if(tableData.data.length <= 1)
 		return;
 	
 	var colIndex = e.target.id;
-	dataTableInc = !dataTableInc;
+	tableData.dataInc = !tableData.dataInc;
 	
 	while(true)
 	{
 		var sorted = true;
 		
-		for(var i = 0; i < dataTable.length - 1; i++)
+		for(var i = 0; i < tableData.data.length - 1; i++)
 		{
-			if((dataTableInc && dataTable[i][colIndex] < dataTable[i + 1][colIndex]) || (!dataTableInc && dataTable[i][colIndex] > dataTable[i + 1][colIndex]))
+			var currVal = tableData.data[i][colIndex];
+			var nextVal = tableData.data[i + 1][colIndex];
+			
+			if((tableData.dataInc && currVal < nextVal) || (!tableData.dataInc && currVal > nextVal))
 			{
-				var tmp = dataTable[i];
-				dataTable[i] = dataTable[i + 1];
-				dataTable[i + 1] = tmp;
+				var tmp = tableData.data[i];
+				tableData.data[i] = tableData.data[i + 1];
+				tableData.data[i + 1] = tmp;
 				sorted = false;
 			}
 		}
@@ -684,7 +685,7 @@ function sortDataTable(e, inc)
 			break;
 	}
 	
-	makeTable($gui.dataTable, dataTable, false, false);
+	makeTable($gui.dataTable, tableData.data, false, false);
 }
 
 // Rounds the number to the nearest hundreths place
@@ -707,15 +708,15 @@ function downloadData()
 {
 	var str = "";
 	
-	for(var i = 0; i < headerTable[0].length; i++)
-		str += headerTable[0][i] + ",";
+	for(var i = 0; i < tableData.header[0].length; i++)
+		str += tableData.header[0][i] + ",";
 	
 	str += "\n";
 	
-	for(var i = 0; i < dataTable.length; i++)
+	for(var i = 0; i < tableData.data.length; i++)
 	{
-		for(var j = 0; j < dataTable[i].length; j++)
-			str += dataTable[i][j] + ",";
+		for(var j = 0; j < tableData.data[i].length; j++)
+			str += tableData.data[i][j] + ",";
 		
 		str += "\n";
 	}
