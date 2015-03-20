@@ -118,6 +118,34 @@ body
 	background-color: #840204;
 }
 
+#eventOptionsContainer
+{	
+	position: absolute;
+	top: 125px;
+	left: 200px;
+}
+
+#eventStats
+{
+	text-align: center;
+	color: white;
+	float: left;
+	width: 125px;
+	height: 21px;
+	background-color: dimgray;
+}
+
+#eventTeamsAttending
+{
+	text-align: center;
+	color: white;
+	float: left;
+	width: 175px;
+	height: 21px;
+	margin-left: 10px;
+	background-color: dimgray;
+}
+
 .button:hover
 {
 	opacity: 0.75;
@@ -127,6 +155,11 @@ body
 .button:active
 {
 	opacity: 0.5;
+}
+
+.deactiveButton
+{
+	opacity: 0.625;
 }
 
 /* Table */

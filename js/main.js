@@ -26,7 +26,8 @@ var tableData = { header: [], data: [], dataInc: true };
 var tableModes = { team: 0, event: 1, teamsAttending: 2 };
 var currTableMode;
 var appendToHistory = true;
-var teamsOPR = { teams: [], needed: 0 };
+var eventStatsTable;
+var teamsOPR = { teams: [], needed: 0, table: null };
 
 // Called when the document has been loaded once
 $(document).ready(init);
@@ -50,6 +51,10 @@ function init()
 	$gui.dataTable = $("#dataTable")[0];
 	$gui.eventCodeInput = $("#eventCodeInput");
 	$gui.eventCodeSubmitButton = $("#eventCodeSubmitButton");
+	$gui.eventOptionsContainer = $("#eventOptionsContainer");
+	$gui.eventStats = $("#eventStats");
+	$gui.eventTeamsAttending = $("#eventTeamsAttending");
+	$gui.eventOptionsContainer.hide();
 	
 	$.widget( "custom.catcomplete", $.ui.autocomplete, 
  	{
@@ -145,6 +150,29 @@ function init()
 		$gui.eventCodeInput.focus();
 	});
 	
+	$gui.eventStats.click(function()
+  	{
+		if(currTableMode === tableModes.teamsAttending)
+		{
+			teamsOPR.table.header = tableData.header;
+			teamsOPR.table.data = tableData.data;
+			currTableMode = tableModes.event;
+			createTables(eventStatsTable.header, eventStatsTable.data);
+		}
+	});
+	
+	$gui.eventTeamsAttending.click(function()
+  	{
+		if(currTableMode === tableModes.event)
+		{
+			eventStatsTable.header = tableData.header;
+			eventStatsTable.data = tableData.data;
+			currTableMode = tableModes.teamsAttending;
+			$("html,body").css("cursor", "progress");
+			checkTeamsOPR();
+		}
+	});
+	
 	$(window).keydown(function(e)
  	{
 		if(e.keyCode === 13) // Enter
@@ -218,19 +246,21 @@ function setEvent(eventCode)
 	var table = [];
 	var eventDataNeed = 2;
 	var eventDataLoad = 0;
+	eventStatsTable = { header: [[]], data: [[]] };
 	
 	var eventDataLoaded = function()
 	{
 		table = update(eventRankingsData, matchesData);
+		getTeamsAttendingEvent(eventCode);
 		
 		if(table.data[0].length === 0)
-		{
 			currTableMode = tableModes.teamsAttending;
-			getTeamsAttendingEvent(eventCode);
-		}
 		
 		else
+		{
 			createTables(table.header, table.data);
+			eventStatsTable = { header: table.header, data: table.data };
+		}
 	}
 	
 	var loadEventData = function()
@@ -256,11 +286,14 @@ function getTeamsAttendingEvent(eventCode)
 {
 	var teamsAtEvent;
 	teamsOPR.teams = [];
+	teamsOPR.table = null;
 	
 	var teamsAtEventLoaded = function()
 	{
 		teamsOPR.needed = teamsAtEvent.length;
-		checkTeamsOPR();
+		
+		if(currTableMode === tableModes.teamsAttending)
+			checkTeamsOPR();
 		
 		for(var i = 0; i < teamsAtEvent.length; i++)
 			setTeam(teamsAtEvent[i].team_number);
@@ -275,41 +308,46 @@ function getTeamsAttendingEvent(eventCode)
 
 function showTeamsAttendingEvent()
 {
-	var header = [["Team #", "Team Name", "Events Played", "Highest Foul ADJ OPR"]];
-	var data = [];
-	
-	while(true)
+	if(teamsOPR.table === null)
 	{
-		var sorted = true;
-		
-		for(var i = 0; i < teamsOPR.needed - 1; i++)
+		var header = [["Team #", "Team Name", "Events Played", "Highest Foul ADJ OPR"]];
+		var data = [];
+
+		while(true)
 		{
-			if(teamsOPR.teams[i].number > teamsOPR.teams[i + 1].number)
+			var sorted = true;
+
+			for(var i = 0; i < teamsOPR.needed - 1; i++)
 			{
-				var tmp = teamsOPR.teams[i];
-				teamsOPR.teams[i] = teamsOPR.teams[i + 1];
-				teamsOPR.teams[i + 1] = tmp;
-				sorted = false;
+				if(teamsOPR.teams[i].number > teamsOPR.teams[i + 1].number)
+				{
+					var tmp = teamsOPR.teams[i];
+					teamsOPR.teams[i] = teamsOPR.teams[i + 1];
+					teamsOPR.teams[i + 1] = tmp;
+					sorted = false;
+				}
+			}
+
+			if(sorted)
+			{
+				for(var i = 0; i <  teamsOPR.needed; i++)
+				{
+					var newData = [];
+
+					for(var j in teamsOPR.teams[i])
+						newData.push(teamsOPR.teams[i][j]);
+
+					data.push(newData);
+				}
+
+				break;
 			}
 		}
-		
-		if(sorted)
-		{
-			for(var i = 0; i <  teamsOPR.needed; i++)
-			{
-				var newData = [];
 
-				for(var j in teamsOPR.teams[i])
-					newData.push(teamsOPR.teams[i][j]);
-
-				data.push(newData);
-			}
-			
-			break;
-		}
+		teamsOPR.table = { header: header, data: data };
 	}
 	
-	createTables(header, data);
+	createTables(teamsOPR.table.header, teamsOPR.table.data);
 }
 
 function checkTeamsOPR()
@@ -384,7 +422,7 @@ function setTeam(teamNumber)
 		if(currTableMode === tableModes.team)
 			createTables(header, data);
 		
-		else if(currTableMode === tableModes.teamsAttending)
+		else if(currTableMode === tableModes.teamsAttending || currTableMode === tableModes.event)
 			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestOPR: highestOPR });
 	}
 	
@@ -454,6 +492,23 @@ function setTeam(teamNumber)
 
 function createTables(header, data)
 {
+	if(currTableMode === tableModes.team)
+		$gui.eventOptionsContainer.hide();
+		
+	else if(currTableMode === tableModes.teamsAttending)
+	{
+		$gui.eventStats.addClass("deactiveButton");
+		$gui.eventTeamsAttending.removeClass("deactiveButton");
+		$gui.eventOptionsContainer.show();
+	}
+	
+	else if(currTableMode === tableModes.event)
+	{
+		$gui.eventStats.removeClass("deactiveButton");
+		$gui.eventTeamsAttending.addClass("deactiveButton");
+		$gui.eventOptionsContainer.show();
+	}
+	
 	makeTable($gui.headerTable, tableData.header = header, true, true);
 	makeTable($gui.dataTable, tableData.data = data, false, false);
 	$("html,body").css("cursor", "default");
