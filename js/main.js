@@ -733,6 +733,10 @@ function getData(key, callback)
 			success:function(data)
 			{
 				callback(data);
+			},
+			error:function()
+			{
+				$("html,body").css("cursor", "default");
 			}
 		});
 		
