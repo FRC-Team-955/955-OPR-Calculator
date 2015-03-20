@@ -256,6 +256,7 @@ function setEvent(eventCode)
 function getTeamsAttendingEvent(eventCode)
 {
 	var teamsAtEvent;
+	teamsOPR.teams = [];
 	
 	var teamsAtEventLoaded = function()
 	{
