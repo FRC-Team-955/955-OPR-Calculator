@@ -22,12 +22,11 @@ var matchSumMatrix;
 var $gui = {};
 
 // Data for table
-var headerTable = []; // Data for header table
-var dataTable = [];   // Data for data table
-var dataTableInc = true;
-var teamMode = false;
-var eventMode = false;
+var tableData = { header: [], data: [], dataInc: true };
+var tableModes = { team: 0, event: 1, teamsAttending: 2 };
+var currTableMode;
 var appendToHistory = true;
+var teamsOPR = { teams: [], needed: 0 };
 
 // Called when the document has been loaded once
 $(document).ready(init);
@@ -120,36 +119,31 @@ function init()
 	});
 	
 	$gui.eventCodeSubmitButton.click(function()
-  	{ 
-		window.setTimeout(function()
-	  	{
-			$gui.eventCodeInput.css("cursor", "progress");
-			$("html,body").css("cursor", "progress");
-		}, 0);
-		
+  	{
+		$gui.eventCodeInput.css("cursor", "progress");
+		$("html,body").css("cursor", "progress");
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		var intInput = parseInt(input, 10);
-		
+
 		try
 		{
 			if(intInput)
+			{
+				currTableMode = tableModes.team;
 				setTeam(intInput);
+			}
 
 			else
+			{
+				currTableMode = tableModes.event;
 				setEvent(input);
+			}
 		}
-		
+
 		catch(e){}
 		
-		makeTable($gui.headerTable, headerTable, true, true);
-		makeTable($gui.dataTable, dataTable, false, false);
 		$gui.eventCodeInput.focus();
-		window.setTimeout(function()
-	  	{
-			$gui.eventCodeInput.css("cursor", "default");
-			$("html,body").css("cursor", "default");
-		}, 1000);
 	});
 	
 	$(window).keydown(function(e)
@@ -220,135 +214,250 @@ function setEvent(eventCode)
 	if(eventCode === "txda")
 		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
 	
-	if(appendToHistory)
-		window.history.pushState("", "", "?search=" + eventCode);
-	
-	teamMode = false;
-	eventMode = true;
-	var eventRankingsData = getData("event/2015" + eventCode + "/rankings");
-	var matchesData = getData("event/2015" + eventCode + "/matches");
-	var table = update(eventRankingsData, matchesData);
-	
-	if(table.data[0].length === 0)
-	{
-		var teamsAtEvent = getData("event/2015" + eventCode + "/teams");
-		
-		for(var i = 0; i < teamsAtEvent.length; i++)
-		{
-			var newData = [];
-			
-			for(var j = 0; j < table.header[0].length; j++)
-				newData[j] = "N/A";
-			
-			newData[1] = teamsAtEvent[i].team_number;
-			table.data[i] = newData;
-		}
-		
-		while(true)
-		{
-			var sorted = true;
-			
-			for(var i = 0; i < table.data.length - 1; i++)
-			{
-				if(table.data[i][1] > table.data[i + 1][1])
-				{
-					var tmp = table.data[i];
-					table.data[i] = table.data[i + 1];
-					table.data[i + 1] = tmp;
-					sorted = false;
-				}
-			}
-			
-			if(sorted)
-				break;
-		}
-	}
-		
-	headerTable = table.header;
-	dataTable = table.data;
-}
-
-function setTeam(teamNumber)
-{
-	if(appendToHistory)
-		window.history.pushState("", "", "?search=" + teamNumber);
-	
-	teamMode = true;
-	eventMode = false;
 	var eventRankingsData = [];
 	var matchesData = [];
-	var teamEvents = getData("team/frc" + teamNumber + "/2015/events");
+	var table = [];
+	var eventDataNeed = 2;
+	var eventDataLoad = 0;
+	
+	var eventDataLoaded = function()
+	{
+		table = update(eventRankingsData, matchesData);
+		
+		if(table.data[0].length === 0)
+		{
+			currTableMode = tableModes.teamsAttending;
+			getTeamsAttendingEvent(eventCode);
+		}
+		
+		else
+			createTables(table.header, table.data);
+	}
+	
+	var loadEventData = function()
+	{
+		if(++eventDataLoad === eventDataNeed)
+			eventDataLoaded();
+	}
+	
+	getData("event/2015" + eventCode + "/rankings", function(data)
+	{
+		eventRankingsData = data;
+		loadEventData();
+	});
+	
+	getData("event/2015" + eventCode + "/matches", function(data)
+	{
+		matchesData = data;
+		loadEventData();
+	});
+}
+
+function getTeamsAttendingEvent(eventCode)
+{
+	var teamsAtEvent;
+	
+	var teamsAtEventLoaded = function()
+	{
+		teamsOPR.needed = teamsAtEvent.length;
+		checkTeamsOPR();
+		
+		for(var i = 0; i < teamsAtEvent.length; i++)
+			setTeam(teamsAtEvent[i].team_number);
+	}
+	
+	getData("event/2015" + eventCode + "/teams", function(data)
+	{
+		teamsAtEvent = data;
+		teamsAtEventLoaded();
+	});
+}
+
+function showTeamsAttendingEvent()
+{
+	var header = [["Team #", "Team Name", "Events Played", "Highest Foul ADJ OPR"]];
+	var data = [];
 	
 	while(true)
 	{
 		var sorted = true;
 		
-		for(var i = 0; i < teamEvents.length - 1; i++)
+		for(var i = 0; i < teamsOPR.needed - 1; i++)
 		{
-			var currDate = teamEvents[i].start_date.split("-");
-			currDate = new Date(currDate[0], currDate[1], currDate[2]);
-			var nextDate = teamEvents[i + 1].start_date.split("-");
-			nextDate = new Date(nextDate[0], nextDate[1], nextDate[2]);
-			
-			if(currDate > nextDate)
+			if(teamsOPR.teams[i].number > teamsOPR.teams[i + 1].number)
 			{
-				var tmp = teamEvents[i];
-				teamEvents[i] = teamEvents[i + 1];
-				teamEvents[i + 1] = tmp;
+				var tmp = teamsOPR.teams[i];
+				teamsOPR.teams[i] = teamsOPR.teams[i + 1];
+				teamsOPR.teams[i + 1] = tmp;
 				sorted = false;
 			}
 		}
 		
 		if(sorted)
+		{
+			for(var i = 0; i <  teamsOPR.needed; i++)
+			{
+				var newData = [];
+
+				for(var j in teamsOPR.teams[i])
+					newData.push(teamsOPR.teams[i][j]);
+
+				data.push(newData);
+			}
+			
 			break;
+		}
 	}
 	
-	for(var i = 0; i < teamEvents.length; i++)
+	createTables(header, data);
+}
+
+function checkTeamsOPR()
+{
+	if(teamsOPR.teams.length < teamsOPR.needed)
 	{
-		eventRankingsData[i] = getData("event/2015" + teamEvents[i].event_code + "/rankings");
-		matchesData[i] = getData("event/2015" + teamEvents[i].event_code + "/matches");
+		window.setTimeout(checkTeamsOPR, 0);
+		return;
 	}
 	
-	var header = 
-	[[
-		"Event Code",
-		"Rank",
-		"Auto OPR",
-		"Bin OPR",
-		"Coop OPR",
-		"Litter OPR",
-		"Tote OPR",
-		"Contribution %",
-		"Foul ADJ OPR"	
-	]];
+	showTeamsAttendingEvent();
+}
 
-	var data = [];
-
-	for(var i = 0; i < eventRankingsData.length; i++)
+function setTeam(teamNumber)
+{
+	var eventRankingsData = [];
+	var matchesData = [];
+	var teamEvents = [];
+	var teamDataNeed = 0;
+	var teamDataLoad = 0;
+	
+	var teamDataLoaded = function()
 	{
-		var table = update(eventRankingsData[i], matchesData[i]);
-		var newData = [];
+		var header = 
+		[[
+			"Event Code",
+			"Rank",
+			"Auto OPR",
+			"Bin OPR",
+			"Coop OPR",
+			"Litter OPR",
+			"Tote OPR",
+			"Contribution %",
+			"Foul ADJ OPR"	
+		]];
+
+		var data = [];
+		var eventsPlayed = 0;
+		var highestOPR = 0;
 		
-		for(var j = 0; j < table.data.length; j++)
-			if(table.data[j][1] === teamNumber)
-				newData = table.data[j];
-		
-		if(newData.length === 0)
-			for(var j = 0; j < header[0].length; j++)
-				newData[j] = "N/A";
+		for(var i = 0; i < eventRankingsData.length; i++)
+		{
+			var table = update(eventRankingsData[i], matchesData[i]);
+			var newData = [];
+
+			for(var j = 0; j < table.data.length; j++)
+				if(table.data[j][1] === teamNumber)
+					newData = table.data[j];
+
+			if(newData.length > 0)
+			{
+				eventsPlayed++;
 				
-		data.push(newData);
-	}
+				if(newData[header[0].length - 1] > highestOPR)
+					highestOPR = newData[header[0].length - 1];
+			}
+			
+			else
+				for(var j = 0; j < header[0].length; j++)
+					newData[j] = "N/A";
 
-	// Row
-	for(var i = 0; i < data.length; i++)
+			data.push(newData);
+		}
+
+		// Row
+		for(var i = 0; i < data.length; i++)
+		{
+			data[i][1] = data[i][0];
+			data[i][0] = teamEvents[i].event_code.toUpperCase();
+		}
+		
+		if(currTableMode === tableModes.team)
+			createTables(header, data);
+		
+		else if(currTableMode === tableModes.teamsAttending)
+			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestOPR: highestOPR });
+	}
+	
+	var loadTeamData = function()
 	{
-		data[i][1] = data[i][0];
-		data[i][0] = teamEvents[i].event_code.toUpperCase();
+		if(++teamDataLoad === teamDataNeed)
+			teamDataLoaded();
 	}
+	
+	var teamEventsLoaded = function(newTeamEvents)
+	{
+		teamEvents = newTeamEvents;
+		teamDataNeed = teamEvents.length * 2;
+		
+		while(true)
+		{
+			var sorted = true;
 
-	headerTable = header;
-	dataTable = data;
+			for(var i = 0; i < teamEvents.length - 1; i++)
+			{
+				var currDate = teamEvents[i].start_date.split("-");
+				currDate = new Date(currDate[0], currDate[1], currDate[2]);
+				var nextDate = teamEvents[i + 1].start_date.split("-");
+				nextDate = new Date(nextDate[0], nextDate[1], nextDate[2]);
+
+				if(currDate > nextDate)
+				{
+					var tmp = teamEvents[i];
+					teamEvents[i] = teamEvents[i + 1];
+					teamEvents[i + 1] = tmp;
+					sorted = false;
+				}
+			}
+
+			if(sorted)
+				break;
+		}
+
+		for(var i = 0; i < teamEvents.length; i++)
+		{
+			var tmp = function()
+			{
+				var currI = i;
+				
+				getData("event/2015" + teamEvents[currI].event_code + "/rankings", function(newEventRankingsData)
+				{
+					eventRankingsData[currI] = newEventRankingsData;
+					loadTeamData();
+				});	
+			}();
+			
+			var tmp = function()
+			{
+				var currI = i;
+				
+				getData("event/2015" + teamEvents[currI].event_code + "/matches", function(newMatchesData)
+				{
+					matchesData[currI] = newMatchesData;
+					loadTeamData();
+				});	
+			}();
+		}
+	}
+	
+ 	getData("team/frc" + teamNumber + "/2015/events", teamEventsLoaded);
+}
+
+function createTables(header, data)
+{
+	makeTable($gui.headerTable, tableData.header = header, true, true);
+	makeTable($gui.dataTable, tableData.data = data, false, false);
+	$gui.eventCodeInput.css("cursor", "default");
+	$("html,body").css("cursor", "default");
 }
 
 // The main body of opr scouting
@@ -557,13 +666,30 @@ function getEmptyMatrix(row, column)
 }
 
 // Gets data from thebluealliance
-function getData(key)
+function getData(key, callback)
 {
-	return JSON.parse($.ajax({ url:"http://www.thebluealliance.com/api/v2/" + key + "?X-TBA-App-Id=frc955:opr-system:v01", async: false }).responseText);
+	var begApiUrl = "http://www.thebluealliance.com/api/v2/";
+	var endApiUrl = "?X-TBA-App-Id=frc955:opr-system:v01";
+	
+	if(callback)
+	{
+		$.ajax
+		({
+			url:begApiUrl + key + endApiUrl,
+			success:function(data)
+			{
+				callback(data);
+			}
+		});
+		
+		return;
+	}
+	
+	return JSON.parse($.ajax({ url: begApiUrl + key + endApiUrl, async: false }).responseText);
 }
 
 // Makes a table in the gui
-function makeTable(table, dataTable, startDark, firstRowBolded)
+function makeTable(table, newDataTable, startDark, firstRowBolded)
 {
 	var $tableContainer = table;
 	var $table = document.createElement("table");
@@ -571,20 +697,21 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 	$table.classList.add("table");
 
 	// Row
-	for(var i = 0; i < dataTable.length; i++)
+	for(var i = 0; i < newDataTable.length; i++)
 	{
 		var newRow = document.createElement("tr");
-
+		newRow.classList.add("tableRow");
+		
 		if((startDark && i % 2 == 0) || (!startDark && i % 2 != 0))
 			newRow.classList.add("darkGray");
 
-		newRow.classList.add("tableRow");
-
 		// Column
-		for(var j = 0; j < dataTable[i].length; j++)
+		for(var j = 0; j < newDataTable[i].length; j++)
 		{
+			var addClickClasses = false;
+			var titleData = "";
 			var newCol = document.createElement("td");
-			dataTable[i][j] = isNaN(dataTable[i][j]) ? dataTable[i][j] : zero(round(dataTable[i][j]));
+			newDataTable[i][j] = isNaN(newDataTable[i][j]) ? newDataTable[i][j] : zero(round(newDataTable[i][j]));
 			
 			if(i === 0 && firstRowBolded)
 			{
@@ -594,24 +721,42 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 				newCol.id = j;
 			}
 			
-			else if((teamMode && j === 0) || (eventMode && j === 1))
+			else if(currTableMode === tableModes.team && j === 0)
+			{
+				addClickClasses = true;
+				
+				for(var k = 0; k < eventCodes.length; k++)
+				{
+					if(newDataTable[i][j].toLowerCase() === eventCodes[k])
+					{
+						titleData = eventNames[k];
+						break;
+					}
+				}
+			}
+			
+			else if(currTableMode === tableModes.event && j === 1)
+			{
+				addClickClasses = true;
+				titleData = teamNames[parseInt(newDataTable[i][j], 10) - 1];
+			}
+			
+			else if(currTableMode === tableModes.teamsAttending && j === 0)
+			{
+				addClickClasses = true;
+				titleData = "";
+			}
+			
+			if(addClickClasses)
 			{
 				newCol.classList.add("button");
 				newCol.classList.add("tableSearchQuery");
-				
-				if(teamMode)
-				{
-					for(var k = 0; k < eventCodes.length; k++)
-						if(dataTable[i][j].toLowerCase() === eventCodes[k])
-							newCol.setAttribute("title", eventNames[k]);
-				}
-				
-				else if(eventMode)
-					newCol.setAttribute("title", teamNames[parseInt(dataTable[i][j], 10) - 1]);
 			}
 			
+			newCol.style.width = (1200 / newDataTable[i].length) + "px";
+			newCol.setAttribute("title", titleData);
 			newCol.classList.add("tableCell");
-			newCol.innerHTML = dataTable[i][j];
+			newCol.innerHTML = newDataTable[i][j];
 			newRow.appendChild(newCol);
 		}
 		
@@ -633,23 +778,26 @@ function makeTable(table, dataTable, startDark, firstRowBolded)
 // Sorts data table
 function sortDataTable(e, inc)
 {	
-	if(dataTable.length <= 1)
+	if(tableData.data.length <= 1)
 		return;
 	
 	var colIndex = e.target.id;
-	dataTableInc = !dataTableInc;
+	tableData.dataInc = !tableData.dataInc;
 	
 	while(true)
 	{
 		var sorted = true;
 		
-		for(var i = 0; i < dataTable.length - 1; i++)
+		for(var i = 0; i < tableData.data.length - 1; i++)
 		{
-			if((dataTableInc && dataTable[i][colIndex] < dataTable[i + 1][colIndex]) || (!dataTableInc && dataTable[i][colIndex] > dataTable[i + 1][colIndex]))
+			var currVal = tableData.data[i][colIndex];
+			var nextVal = tableData.data[i + 1][colIndex];
+			
+			if((tableData.dataInc && currVal < nextVal) || (!tableData.dataInc && currVal > nextVal))
 			{
-				var tmp = dataTable[i];
-				dataTable[i] = dataTable[i + 1];
-				dataTable[i + 1] = tmp;
+				var tmp = tableData.data[i];
+				tableData.data[i] = tableData.data[i + 1];
+				tableData.data[i + 1] = tmp;
 				sorted = false;
 			}
 		}
@@ -658,7 +806,7 @@ function sortDataTable(e, inc)
 			break;
 	}
 	
-	makeTable($gui.dataTable, dataTable, false, false);
+	makeTable($gui.dataTable, tableData.data, false, false);
 }
 
 // Rounds the number to the nearest hundreths place
@@ -681,15 +829,15 @@ function downloadData()
 {
 	var str = "";
 	
-	for(var i = 0; i < headerTable[0].length; i++)
-		str += headerTable[0][i] + ",";
+	for(var i = 0; i < tableData.header[0].length; i++)
+		str += tableData.header[0][i] + ",";
 	
 	str += "\n";
 	
-	for(var i = 0; i < dataTable.length; i++)
+	for(var i = 0; i < tableData.data.length; i++)
 	{
-		for(var j = 0; j < dataTable[i].length; j++)
-			str += dataTable[i][j] + ",";
+		for(var j = 0; j < tableData.data[i].length; j++)
+			str += tableData.data[i][j] + ",";
 		
 		str += "\n";
 	}
