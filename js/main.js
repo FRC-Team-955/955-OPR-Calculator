@@ -120,7 +120,6 @@ function init()
 	
 	$gui.eventCodeSubmitButton.click(function()
   	{
-		$gui.eventCodeInput.css("cursor", "progress");
 		$("html,body").css("cursor", "progress");
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
@@ -457,7 +456,6 @@ function createTables(header, data)
 {
 	makeTable($gui.headerTable, tableData.header = header, true, true);
 	makeTable($gui.dataTable, tableData.data = data, false, false);
-	$gui.eventCodeInput.css("cursor", "default");
 	$("html,body").css("cursor", "default");
 }
 
@@ -711,6 +709,7 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 		{
 			var addClickClasses = false;
 			var titleData = "";
+			var valueData = "";
 			var newCol = document.createElement("td");
 			newDataTable[i][j] = isNaN(newDataTable[i][j]) ? newDataTable[i][j] : zero(round(newDataTable[i][j]));
 			
@@ -731,6 +730,7 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 					if(newDataTable[i][j].toLowerCase() === eventCodes[k])
 					{
 						titleData = eventNames[k];
+						valueData = eventCodes[k];
 						break;
 					}
 				}
@@ -739,13 +739,15 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 			else if(currTableMode === tableModes.event && j === 1)
 			{
 				addClickClasses = true;
-				titleData = teamNames[parseInt(newDataTable[i][j], 10) - 1];
+				titleData = teamNames[newDataTable[i][j] - 1];
+				valueData = newDataTable[i][j];
 			}
 			
-			else if(currTableMode === tableModes.teamsAttending && j === 0)
+			else if(currTableMode === tableModes.teamsAttending && (j === 0 || j === 1))
 			{
 				addClickClasses = true;
-				titleData = "";
+				titleData = j === 0 ? teamNames[newDataTable[i][0] - 1] : "Team " + newDataTable[i][0];
+				valueData = newDataTable[i][0];
 			}
 			
 			if(addClickClasses)
@@ -756,6 +758,7 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 			
 			newCol.style.width = (1200 / newDataTable[i].length) + "px";
 			newCol.setAttribute("title", titleData);
+			newCol.setAttribute("value", valueData);
 			newCol.classList.add("tableCell");
 			newCol.innerHTML = newDataTable[i][j];
 			newRow.appendChild(newCol);
@@ -772,7 +775,7 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 	$(".button.tableSearchQuery").click(function()
 	{
 		var begParamI = document.URL.indexOf("?");
-		window.open(document.URL.substring(0, begParamI) + "?search=" + this.innerHTML.toLowerCase());
+		window.open(document.URL.substring(0, begParamI) + "?search=" + this.getAttribute("value"));
 	});
 }
 
