@@ -543,6 +543,27 @@ function update(eventRankingsData, matchesData)
 	var teamsMatrix = M(totalTeams, 1);
 
 	// Global Matrices [A]
+	// Array version TODO: Fix this to be proper name
+	matchesMatrixArray = [];
+	teamsParticipationMatrixArray = [];
+	
+	for(var i = 0; i < totalTeams; i++)
+	{
+		matchesMatrixArray[i] = [];
+		
+		for(var j = 0; j < totalMatches * 2; j++)
+			matchesMatrixArray[i][j] = 0;
+	}
+	
+	for(var i = 0; i < totalMatches * 2; i++)
+	{
+		teamsParticipationMatrixArray[i] = [];
+		
+		for(var j = 0; j < totalTeams; j++)
+			teamsParticipationMatrixArray[i][j] = 0;
+	}
+	
+	// Actual matrix
 	matchesMatrix = getEmptyMatrix(totalTeams, totalMatches * 2);
 	teamsParticipationMatrix = getEmptyMatrix(totalMatches * 2, totalTeams);
 
@@ -552,6 +573,16 @@ function update(eventRankingsData, matchesData)
 	var teamsCoopMatrix = M(totalTeams, 1);
 	var teamsLitterMatrix = M(totalTeams, 1);
 	var teamsToteMatrix = M(totalTeams, 1);
+	// Array version
+	matchSumMatrixArray = [];
+	
+	for(var i = 0; i < totalMatches * 2; i++)
+	{
+		matchSumMatrixArray[i] = [];
+		matchSumMatrixArray[i][0] = 0;
+	}
+	
+	// Actual matrix
 	matchSumMatrix = M(totalMatches * 2, 1);
 
 	//OPR matrices
@@ -590,9 +621,12 @@ function update(eventRankingsData, matchesData)
 			{
 				var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3), 10);
 
+				matchesMatrixArray[teamsIndex[teamNumber]][(matchNumber - 1) * 2] = 1;
+				teamsParticipationMatrixArray[(matchNumber - 1) * 2][teamsIndex[teamNumber]] = 1;
+				
 				// Global Matrix [A]
-				matchesMatrix.set(teamsIndex[teamNumber], (matchNumber - 1) * 2, 1);
-				teamsParticipationMatrix.set((matchNumber - 1) * 2, teamsIndex[teamNumber], 1);
+//				matchesMatrix.set(teamsIndex[teamNumber], (matchNumber - 1) * 2, 1);
+//				teamsParticipationMatrix.set((matchNumber - 1) * 2, teamsIndex[teamNumber], 1);
 			}
 
 			// Loop though blue alliance, set corresponding matrix row column to 1
@@ -600,17 +634,54 @@ function update(eventRankingsData, matchesData)
 			{
 				var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3), 10);
 
+				matchesMatrixArray[teamsIndex[teamNumber]][((matchNumber - 1) * 2) + 1] = 1;
+				teamsParticipationMatrixArray[((matchNumber - 1) * 2) + 1][teamsIndex[teamNumber]] = 1;
+				
 				// Global Matrix [A]
-				matchesMatrix.set(teamsIndex[teamNumber], ((matchNumber - 1) * 2) + 1, 1);
-				teamsParticipationMatrix.set(((matchNumber - 1) * 2) + 1, teamsIndex[teamNumber], 1);
+//				matchesMatrix.set(teamsIndex[teamNumber], ((matchNumber - 1) * 2) + 1, 1);
+//				teamsParticipationMatrix.set(((matchNumber - 1) * 2) + 1, teamsIndex[teamNumber], 1);
 			}
 
+			matchSumMatrixArray[(matchNumber - 1) * 2][0] = matchesData[i].alliances.red.score;
+			matchSumMatrixArray[((matchNumber - 1) * 2) + 1][0] = matchesData[i].alliances.blue.score;
+			
 			// Add match sums to matrix, Component Matrix [b]
-			matchSumMatrix.set((matchNumber - 1) * 2, 0, matchesData[i].alliances.red.score);
-			matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
+//			matchSumMatrix.set((matchNumber - 1) * 2, 0, matchesData[i].alliances.red.score);
+//			matchSumMatrix.set(((matchNumber - 1) * 2) + 1, 0, matchesData[i].alliances.blue.score);
 		}	
 	}
+	
+	var newLen = totalMatches * 2;
+	
+	for(var i = 0; i < newLen; i++)
+	{		
+		if(matchSumMatrixArray[i][0] === -1)
+		{
+			for(var j = 0; j < matchesMatrixArray.length; j++)
+				matchesMatrixArray[j].splice(i, 1);
+			
+			teamsParticipationMatrixArray.splice(i, 1);
+			matchSumMatrixArray.splice(i, 1);
+			newLen--;
+			i--;
+		}
+	}
 
+	matchesMatrix = getEmptyMatrix(totalTeams, newLen);
+	teamsParticipationMatrix = getEmptyMatrix(newLen, totalTeams);
+	matchSumMatrix = getEmptyMatrix(newLen, 1);
+	
+	for(var i = 0; i < newLen; i++)
+	{
+		for(var j = 0; j < totalTeams; j++)
+		{
+			matchesMatrix.set(j, i, matchesMatrixArray[j][i]);
+			teamsParticipationMatrix.set(i, j, teamsParticipationMatrixArray[i][j]);
+		}
+		
+		matchSumMatrix.set(i, 0, matchSumMatrixArray[i][0]);
+	}
+	
 	OPRMatrix = m4th.lu(matchesMatrix.mult(teamsParticipationMatrix)).getInverse();
 
 	autoPR = getComponentOPR(teamsAutoMatrix);
