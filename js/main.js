@@ -406,6 +406,9 @@ function setTeam(teamNumber)
 		
 		for(var i = 0; i < eventRankingsData.length; i++)
 		{
+			if(eventRankingsData[i].length < 1)
+				matchesData[i] = [];
+				
 			var table = update(eventRankingsData[i], matchesData[i]);
 			var newData = [];
 
