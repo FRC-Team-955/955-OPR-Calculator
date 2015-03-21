@@ -47,6 +47,7 @@ function init()
 		if(teamNames[i])
 			autoCompleteSource.push({ label: (i + 1) + " | " + teamNames[i], category: "Teams" });
 		
+	$gui.header = $("#header");
 	$gui.headerTable = $("#headerTable")[0];
 	$gui.dataTable = $("#dataTable")[0];
 	$gui.eventCodeInput = $("#eventCodeInput");
@@ -183,11 +184,21 @@ function init()
 		}
 	});
 	
+	var currScrollX = 0;
+	
+	$(window).scroll(function()
+ 	{
+		if(currScrollX !== $(document).scrollLeft())
+		{
+			currScrollX = $(document).scrollLeft();
+			$gui.header.css("left", -currScrollX + "px");
+		}
+	});
+	
 	window.onpopstate = function(e)
 	{	
 		appendToHistory = false;
 		processURLParameter();
-		appendToHistory = true;
 	}
 	
 	$("#eventCodeDownloadButton").click(downloadData);
@@ -261,6 +272,11 @@ function setEvent(eventCode)
 			createTables(table.header, table.data);
 			eventStatsTable = { header: table.header, data: table.data };
 		}
+		
+		if(appendToHistory)
+			window.history.pushState("", "", "?search=" + eventCode);
+		
+		appendToHistory = true;
 	}
 	
 	var loadEventData = function()
@@ -420,7 +436,14 @@ function setTeam(teamNumber)
 		}
 		
 		if(currTableMode === tableModes.team)
+		{
 			createTables(header, data);
+			
+			if(appendToHistory)
+				window.history.pushState("", "", "?search=" + teamNumber);
+		
+			appendToHistory = true;
+		}
 		
 		else if(currTableMode === tableModes.teamsAttending || currTableMode === tableModes.event)
 			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestOPR: highestOPR });
