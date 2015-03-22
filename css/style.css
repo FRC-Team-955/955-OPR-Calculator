@@ -97,22 +97,16 @@ body
 
 #eventCodeSubmitButton
 {
-	text-align: center;
 	color: white;
-	float: left;
 	width: 100px;
-	height: 21px;
 	margin-left: 5px;
 	background-color: #840204;
 }
 
 #eventCodeDownloadButton
 {
-	text-align: center;
 	color: white;
-	float: left;
 	width: 125px;
-	height: 21px;
 	margin-left: 10px;
 	background-color: #840204;
 }
@@ -128,24 +122,26 @@ body
 
 #eventStats
 {
-	text-align: center;
 	color: white;
-	float: left;
 	width: 125px;
-	height: 21px;
 	margin-left: 2px;
 	background-color: dimgray;
 }
 
 #eventTeamsAttending
 {
-	text-align: center;
 	color: white;
-	float: left;
 	width: 175px;
-	height: 21px;
 	margin-left: 10px;
 	background-color: dimgray;
+}
+
+.oneLineText
+{
+	height: 21x;
+	line-height: 21px;
+	float: left;
+	text-align: center;
 }
 
 .button:hover
