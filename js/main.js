@@ -7,6 +7,9 @@ var eventCodes;
 // All the team names
 var teamNames;
 
+// All the active teams
+var activeTeams;
+
 // Variables
 var M = m4th.matrix;		// Matrix object to spawn more matrices from
 
@@ -37,15 +40,15 @@ function init()
 {	
 	setEventNamesAndCodes();
 	setTeamNames();
+	setActiveTeams();
 	
 	var autoCompleteSource = [];
 	
 	for(var i = 0; i < eventNames.length; i++)
 		autoCompleteSource.push({ label: eventNames[i], category: "Events" });
 	
-	for(var i = 0; i < teamNames.length; i++)
-		if(teamNames[i])
-			autoCompleteSource.push({ label: (i + 1) + " | " + teamNames[i], category: "Teams" });
+	for(var i = 0; i < activeTeams.length; i++)
+			autoCompleteSource.push({ label: activeTeams[i] + " | " + teamNames[activeTeams[i] - 1], category: "Teams" });
 		
 	$gui.header = $("#header");
 	$gui.headerTable = $("#headerTable")[0];
@@ -204,6 +207,16 @@ function init()
 	$("#eventCodeDownloadButton").click(downloadData);
 	$gui.eventCodeInput.focus();
 	processURLParameter();
+	
+//	currTableMode = tableModes.teamsAttending;
+//	var maxTeamsSet = activeTeams.length;
+//	teamsOPR.table = null;
+//	teamsOPR.needed = maxTeamsSet;
+//	
+//	for(var i = 0; i < activeTeams.length && i < maxTeamsSet; i++)
+//		setTeam(activeTeams[i]);
+//	
+//	checkTeamsOPR();
 }
 
 function processURLParameter()
@@ -370,7 +383,7 @@ function checkTeamsOPR()
 {
 	if(teamsOPR.teams.length < teamsOPR.needed)
 	{
-		window.setTimeout(checkTeamsOPR, 0);
+		window.setTimeout(checkTeamsOPR, 1);
 		return;
 	}
 	
@@ -820,7 +833,7 @@ function getEmptyMatrix(row, column)
 function getData(key, callback)
 {
 	var begApiUrl = "http://www.thebluealliance.com/api/v2/";
-	var endApiUrl = "?X-TBA-App-Id=frc955:opr-system:v01";
+	var endApiUrl = "?X-TBA-App-Id=frc955:opr-system:v02";
 	
 	if(callback)
 	{
@@ -834,6 +847,7 @@ function getData(key, callback)
 			error:function()
 			{
 				$("html,body").css("cursor", "default");
+				callback(null);
 			}
 		});
 		
@@ -1070,6 +1084,32 @@ function getAllTeamNames()
 	}
 	
 	saveFile("teamNames.txt", fileData);
+}
+
+function getAllActiveTeams()
+{
+	console.log("Active Teams Called");
+	var activeTeams = "";
+	var maxTeams = 6000;
+	var dataNeed = maxTeams;
+	
+	for(var i = 0; i < maxTeams; i++)
+	{
+		var isTeamActive = function()
+		{
+			var team = i + 1;
+			console.log("Loading: " + team);
+
+			getData("team/frc" + team + "/2015/events", function(data)
+			{
+				if(data && data.length > 0)
+					activeTeams += "\t\t" + team + ",\n";
+				
+				if(--dataNeed === 0)
+					saveFile("activeTeams.txt", activeTeams);
+			});
+		}();
+	}
 }
 
 function escapeRegExp(string)
