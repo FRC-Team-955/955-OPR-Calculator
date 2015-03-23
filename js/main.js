@@ -206,21 +206,8 @@ function init()
 	
 	$("#eventCodeDownloadButton").click(downloadData);
 	$gui.eventCodeInput.focus();
-	processURLParameter();
-	
-	currTableMode = tableModes.teamsAttending;
-	teamsOPR.table = null;
-	teamsOPR.needed = activeTeams.length;;
-	
-	for(var i = 0; i < maxInProgress; i++)
-		setTeam(activeTeams[i]);
-	
-	currTeamIndex = maxInProgress;
-	checkTeamsOPR();	
+	processURLParameter();	
 }
-
-var maxInProgress = 250;
-var currTeamIndex = 0;
 
 function processURLParameter()
 {
@@ -465,10 +452,7 @@ function setTeam(teamNumber)
 		}
 		
 		else if(currTableMode === tableModes.teamsAttending || currTableMode === tableModes.event)
-		{
 			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestOPR: highestOPR });
-			setTeam(activeTeams[currTeamIndex++]);
-		}
 	}
 	
 	var loadTeamData = function()
