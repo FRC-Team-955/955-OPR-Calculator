@@ -542,11 +542,16 @@ function createTables(header, data)
 	
 	tableData.header = header;
 	tableData.data = data;
-	var rowHeaderTable = [["#"]];
-	var rowDataTable = [];
-	
-	for(var  i = 0; i < tableData.data.length; i++)
-		rowDataTable[i] = [i + 1];
+	var rowHeaderTable = [[]];
+	var rowDataTable = [[]];
+
+	if(tableData.data[0].length > 0)
+	{
+		rowHeaderTable = [["#"]];
+		
+		for(var  i = 0; i < tableData.data.length; i++)
+			rowDataTable[i] = [i + 1];
+	}
 	
 	// Row tables
 	makeTable($gui.rowHeaderTable, rowHeaderTable, true, true, true);
@@ -871,6 +876,9 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 	var $table = document.createElement("table");
 	$table.setAttribute("id", "table");
 	$table.classList.add("table");
+	var rowDataWidth = 50;
+	var nonRowDataWidth = (1114 / newDataTable[0].length) + (newDataTable[0].length === 4 ? 3.125 : -1.7);
+	var tableCellWidth = (isRowTable ? rowDataWidth : nonRowDataWidth) + "px";
 
 	// Row
 	for(var i = 0; i < newDataTable.length; i++)
@@ -939,7 +947,7 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 				}
 			}
 			
-			newCol.style.width = (isRowTable ? 51 : Math.floor(1114 / newDataTable[i].length)) + "px";
+			newCol.style.width = tableCellWidth;
 			newCol.setAttribute("title", titleData);
 			newCol.setAttribute("value", valueData);
 			newCol.classList.add("tableCell");
