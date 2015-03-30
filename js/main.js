@@ -51,6 +51,8 @@ function init()
 			autoCompleteSource.push({ label: activeTeams[i] + " | " + teamNames[activeTeams[i] - 1], category: "Teams" });
 		
 	$gui.header = $("#header");
+	$gui.rowHeaderTable = $("#rowHeaderTable")[0];
+	$gui.rowDataTable = $("#rowDataTable")[0];
 	$gui.headerTable = $("#headerTable")[0];
 	$gui.dataTable = $("#dataTable")[0];
 	$gui.eventCodeInput = $("#eventCodeInput");
@@ -538,8 +540,23 @@ function createTables(header, data)
 		$gui.eventOptionsContainer.show();
 	}
 	
-	makeTable($gui.headerTable, tableData.header = header, true, true);
-	makeTable($gui.dataTable, tableData.data = data, false, false);
+	tableData.header = header;
+	tableData.data = data;
+	var rowHeaderTable = [["#"]];
+	var rowDataTable = [];
+	
+	for(var  i = 0; i < tableData.data.length; i++)
+		rowDataTable[i] = [i + 1];
+	
+	// Row tables
+	makeTable($gui.rowHeaderTable, rowHeaderTable, true, true, true);
+	makeTable($gui.rowDataTable, rowDataTable, true, false, false);
+	
+	// Content tables
+	makeTable($gui.headerTable, tableData.header, false, true, true);
+	makeTable($gui.dataTable, tableData.data, false, false, false);
+	
+	// Reset cursor
 	$("html,body").css("cursor", "default");
 }
 
@@ -848,7 +865,7 @@ function getData(key, callback)
 }
 
 // Makes a table in the gui
-function makeTable(table, newDataTable, startDark, firstRowBolded)
+function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 {
 	var $tableContainer = table;
 	var $table = document.createElement("table");
@@ -877,46 +894,52 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 			{
 				newCol = document.createElement("th");
 				newCol.classList.add("tableCellHeader");
-				newCol.classList.add("button");
+				
+				if(!isRowTable)
+					newCol.classList.add("button");
+				
 				newCol.id = j;
 			}
 			
-			else if(currTableMode === tableModes.team && j === 0)
+			else if(!isRowTable)
 			{
-				addClickClasses = true;
-				
-				for(var k = 0; k < eventCodes.length; k++)
+				if(currTableMode === tableModes.team && j === 0)
 				{
-					if(newDataTable[i][j].toLowerCase() === eventCodes[k])
+					addClickClasses = true;
+
+					for(var k = 0; k < eventCodes.length; k++)
 					{
-						titleData = eventNames[k];
-						valueData = eventCodes[k];
-						break;
+						if(newDataTable[i][j].toLowerCase() === eventCodes[k])
+						{
+							titleData = eventNames[k];
+							valueData = eventCodes[k];
+							break;
+						}
 					}
+				}
+
+				else if(currTableMode === tableModes.event && j === 1)
+				{
+					addClickClasses = true;
+					titleData = teamNames[newDataTable[i][j] - 1];
+					valueData = newDataTable[i][j];
+				}
+
+				else if(currTableMode === tableModes.teamsAttending && (j === 0 || j === 1))
+				{
+					addClickClasses = true;
+					titleData = j === 0 ? teamNames[newDataTable[i][0] - 1] : "Team " + newDataTable[i][0];
+					valueData = newDataTable[i][0];
+				}
+
+				if(addClickClasses)
+				{
+					newCol.classList.add("button");
+					newCol.classList.add("tableSearchQuery");
 				}
 			}
 			
-			else if(currTableMode === tableModes.event && j === 1)
-			{
-				addClickClasses = true;
-				titleData = teamNames[newDataTable[i][j] - 1];
-				valueData = newDataTable[i][j];
-			}
-			
-			else if(currTableMode === tableModes.teamsAttending && (j === 0 || j === 1))
-			{
-				addClickClasses = true;
-				titleData = j === 0 ? teamNames[newDataTable[i][0] - 1] : "Team " + newDataTable[i][0];
-				valueData = newDataTable[i][0];
-			}
-			
-			if(addClickClasses)
-			{
-				newCol.classList.add("button");
-				newCol.classList.add("tableSearchQuery");
-			}
-			
-			newCol.style.width = (1200 / newDataTable[i].length) + "px";
+			newCol.style.width = (isRowTable ? 51 : Math.floor(1114 / newDataTable[i].length)) + "px";
 			newCol.setAttribute("title", titleData);
 			newCol.setAttribute("value", valueData);
 			newCol.classList.add("tableCell");
@@ -929,7 +952,7 @@ function makeTable(table, newDataTable, startDark, firstRowBolded)
 
 	$tableContainer.innerHTML = $table.outerHTML;
 	
-	if(firstRowBolded)
+	if(firstRowBolded && !isRowTable)
 		$(".tableCellHeader").click(sortDataTable);
 	
 	$(".button.tableSearchQuery").click(function()
@@ -970,7 +993,7 @@ function sortDataTable(e, inc)
 			break;
 	}
 	
-	makeTable($gui.dataTable, tableData.data, false, false);
+	makeTable($gui.dataTable, tableData.data, false, false, false);
 }
 
 // Rounds the number to the nearest hundreths place

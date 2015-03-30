@@ -176,25 +176,48 @@ body
 	background-color: #dfdfdf;
 }
 
-#headerTable
+.tableContainer
 {
 	width: 1200px;
 	position: absolute;
 	margin: 0 auto;
 	left: 0px;
 	right: 0px;
+}
+
+.rowTable
+{
+	position: absolute;
+	width: 200px;
+	left: 0;
+}
+
+.contentTable
+{
+	position: absolute;
+	width: 1000;
+	right: 0;
+}
+
+#headerTableContainer
+{
 	top: 150px;
+}
+
+#dataTableContainer
+{
+	font-family: lato; 
+	margin-top: 185px;
+}
+
+#headerTable
+{
+	
 }
 
 #dataTable
 {
-	font-family: lato; 
-	width: 1200px;
-	position: absolute;
-	margin: 0 auto;
-	left: 0px;
-	right: 0px;
-	margin-top: 185px;
+	
 }
 
 .tableSearchQuery
@@ -214,7 +237,7 @@ body
 
 .tableCell
 {
-	width: 133.33px;
+/*	width: 133.33px;*/
 	height: 30px;
 	font-size: 12px;
 }
