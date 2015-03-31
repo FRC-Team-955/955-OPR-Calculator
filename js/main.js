@@ -303,6 +303,7 @@ function setEvent(eventCode)
 	});
 }
 
+// Gets all the teams attending an event
 function getTeamsAttendingEvent(eventCode)
 {
 	var teamsAtEvent;
@@ -327,6 +328,7 @@ function getTeamsAttendingEvent(eventCode)
 	});
 }
 
+// Organizes all the team data
 function showTeamsAttendingEvent()
 {
 	if(teamsOPR.table === null)
@@ -371,6 +373,7 @@ function showTeamsAttendingEvent()
 	createTables(teamsOPR.table.header, teamsOPR.table.data);
 }
 
+// Checks if the teamsOPR obj has all the team data loaded
 function checkTeamsOPR()
 {
 	if(teamsOPR.teams.length < teamsOPR.needed)
@@ -382,6 +385,7 @@ function checkTeamsOPR()
 	showTeamsAttendingEvent();
 }
 
+// Gets data from a team
 function setTeam(teamNumber)
 {
 	var eventRankingsData = [];
@@ -521,6 +525,7 @@ function setTeam(teamNumber)
  	getData("team/frc" + teamNumber + "/2015/events", teamEventsLoaded);
 }
 
+// Creates and displays all the tables
 function createTables(header, data)
 {
 	if(currTableMode === tableModes.team)
@@ -979,10 +984,28 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 	if(firstRowBolded && !isRowTable)
 		$(".tableCellHeader").click(sortDataTable);
 	
-	$(".button.tableSearchQuery").click(function()
+	$(".button.tableSearchQuery").mousedown(function(e)
 	{
-		var begParamI = document.URL.indexOf("?");
-		window.open(document.URL.substring(0, begParamI) + "?search=" + this.getAttribute("value"));
+		var val = this.getAttribute("value");
+		
+		// Open current team/event in new opr tab
+		if(e.which === 1) // Left mouse button
+		{
+			var begParamI = document.URL.indexOf("?");
+			window.open(document.URL.substring(0, begParamI) + "?search=" + val);
+		}
+		
+		// Open current team/event in theb
+		else if(e.which === 3) // Right mouse button
+		{
+			var intVal = parseInt(val);
+
+			if(intVal)
+				window.open("http://www.thebluealliance.com/team/" + intVal + "/2015");
+
+			else
+				window.open("http://www.thebluealliance.com/event/2015" + val);
+		}
 	});
 }
 
