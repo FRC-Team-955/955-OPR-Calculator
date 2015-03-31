@@ -131,8 +131,7 @@ function init()
 	
 	$gui.eventCodeSubmitButton.click(function()
   	{
-		$gui.eventCodeInput.css("cursor", "wait");
-		$("html,body").css("cursor", "wait");
+		changeToLoadingCursor();
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		var intInput = parseInt(input, 10);
@@ -172,10 +171,10 @@ function init()
   	{
 		if(currTableMode === tableModes.event)
 		{
+			changeToLoadingCursor();
 			eventStatsTable.header = tableData.header;
 			eventStatsTable.data = tableData.data;
 			currTableMode = tableModes.teamsAttending;
-			$("html,body").css("cursor", "progress");
 			checkTeamsOPR();
 		}
 	});
@@ -563,11 +562,22 @@ function createTables(header, data)
 	makeTable($gui.dataTable, tableData.data, false, false, false);
 	
 	// Reset cursor
-	$gui.eventCodeInput.hover(function()
-  	{
-		$(this).css("cursor", "text");
-	});
-	
+	resetCursor();
+}
+
+// Changes the cursor to loading
+function changeToLoadingCursor()
+{
+	$gui.eventCodeInput.css("cursor", "wait");
+	$(".button").css("cursor", "wait");
+	$("html,body").css("cursor", "wait");
+}
+
+// Resets the cursor
+function resetCursor()
+{
+	$gui.eventCodeInput.css("cursor", "text");
+	$(".button").css("cursor", "pointer");
 	$("html,body").css("cursor", "default");
 }
 
@@ -864,7 +874,7 @@ function getData(key, callback)
 			},
 			error:function()
 			{
-				$("html,body").css("cursor", "default");
+				resetCursor();
 				callback(null);
 			}
 		});
