@@ -131,7 +131,8 @@ function init()
 	
 	$gui.eventCodeSubmitButton.click(function()
   	{
-		$("html,body").css("cursor", "progress");
+		$gui.eventCodeInput.css("cursor", "wait");
+		$("html,body").css("cursor", "wait");
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		var intInput = parseInt(input, 10);
@@ -562,6 +563,11 @@ function createTables(header, data)
 	makeTable($gui.dataTable, tableData.data, false, false, false);
 	
 	// Reset cursor
+	$gui.eventCodeInput.hover(function()
+  	{
+		$(this).css("cursor", "text");
+	});
+	
 	$("html,body").css("cursor", "default");
 }
 
