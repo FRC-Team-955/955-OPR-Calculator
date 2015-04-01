@@ -25,6 +25,7 @@ var matchSumMatrix;
 var $gui = {};
 
 // Data for table
+var inputVal = "";
 var tableData = { header: [], data: [], dataInc: true };
 var tableModes = { team: 0, event: 1, teamsAttending: 2 };
 var currTableMode;
@@ -60,7 +61,10 @@ function init()
 	$gui.eventOptionsContainer = $("#eventOptionsContainer");
 	$gui.eventStats = $("#eventStats");
 	$gui.eventTeamsAttending = $("#eventTeamsAttending");
-	$gui.eventOptionsContainer.hide();
+	$gui.eventTheBlueAlliance = $("#eventTheBlueAlliance");
+	$gui.eventStats.hide();
+	$gui.eventTeamsAttending.hide();
+	$gui.eventTheBlueAlliance.hide();
 	
 	$.widget( "custom.catcomplete", $.ui.autocomplete, 
  	{
@@ -122,6 +126,17 @@ function init()
 			
 			$(".ui-autocomplete").css("width", (width + 13) + "px");
 		} 
+	});
+	
+	$gui.eventTheBlueAlliance.click(function()
+  	{
+		var intInput = parseInt(inputVal, 10);
+
+		if(intInput)
+			window.open("http://www.thebluealliance.com/team/" + inputVal + "/2015");
+
+		else
+			window.open("http://www.thebluealliance.com/event/2015" + inputVal);
 	});
 	
 	$gui.eventCodeInput.click(function()
@@ -250,13 +265,37 @@ function processURLParameter()
 // Set the event to get the opr data from
 function setEvent(eventCode) 
 {	
+	var foundEventCode = false;
+	
 	for(var i = 0; i < eventNames.length; i++)
+	{
 		if(eventNames[i].toLowerCase() === eventCode)
+		{
+			foundEventCode = true;
 			eventCode = eventCodes[i];
+			break;
+		}
+	}
 	
-	if(eventCode === "txda")
-		alert("Warning: Data for this event is incomplete; results may be inaccurate.");
+	if(!foundEventCode)
+	{
+		for(var i = 0; i < eventCodes.length; i++)
+		{
+			if(eventCodes[i] === eventCode)
+			{
+				foundEventCode = true;
+				break;
+			}
+		}
+		
+		if(!foundEventCode)
+		{
+			resetCursor();
+			return;
+		}
+	}
 	
+	inputVal = eventCode;
 	var eventRankingsData = [];
 	var matchesData = [];
 	var table = [];
@@ -523,26 +562,32 @@ function setTeam(teamNumber)
 	}
 	
  	getData("team/frc" + teamNumber + "/2015/events", teamEventsLoaded);
+	
+	if(currTableMode === tableModes.team)
+		inputVal = teamNumber;	
 }
 
 // Creates and displays all the tables
 function createTables(header, data)
 {
+	$gui.eventTheBlueAlliance.show();
+	
 	if(currTableMode === tableModes.team)
-		$gui.eventOptionsContainer.hide();
+	{
+		$gui.eventStats.hide();
+		$gui.eventTeamsAttending.hide();
+	}
 		
 	else if(currTableMode === tableModes.teamsAttending)
 	{
-		$gui.eventStats.addClass("deactiveButton");
-		$gui.eventTeamsAttending.removeClass("deactiveButton");
-		$gui.eventOptionsContainer.show();
+		$gui.eventStats.addClass("deactiveButton").show();
+		$gui.eventTeamsAttending.removeClass("deactiveButton").show();
 	}
 	
 	else if(currTableMode === tableModes.event)
 	{
-		$gui.eventStats.removeClass("deactiveButton");
-		$gui.eventTeamsAttending.addClass("deactiveButton");
-		$gui.eventOptionsContainer.show();
+		$gui.eventStats.removeClass("deactiveButton").show();
+		$gui.eventTeamsAttending.addClass("deactiveButton").show();
 	}
 	
 	tableData.header = header;
@@ -985,26 +1030,13 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 		$(".tableCellHeader").click(sortDataTable);
 	
 	$(".button.tableSearchQuery").mousedown(function(e)
-	{
-		var val = this.getAttribute("value");
-		
+	{		
 		// Open current team/event in new opr tab
 		if(e.which === 1) // Left mouse button
 		{
+			var val = this.getAttribute("value");
 			var begParamI = document.URL.indexOf("?");
 			window.open(document.URL.substring(0, begParamI) + "?search=" + val);
-		}
-		
-		// Open current team/event in theb
-		else if(e.which === 3) // Right mouse button
-		{
-			var intVal = parseInt(val);
-
-			if(intVal)
-				window.open("http://www.thebluealliance.com/team/" + intVal + "/2015");
-
-			else
-				window.open("http://www.thebluealliance.com/event/2015" + val);
 		}
 	});
 }
