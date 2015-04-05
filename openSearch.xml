@@ -1,0 +1,9 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+<ShortName>OPR Calculator</ShortName>
+<Description>
+OPR Calculator
+</Description>
+<InputEncoding>UTF-8</InputEncoding>
+<Image width="16" height="16" type="images/tabLogo"></Image>
+<Url type="text/html" template="http://www.team955.org/?search={searchTerms}"/>
+</OpenSearchDescription>
