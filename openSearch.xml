@@ -5,5 +5,5 @@ OPR Calculator
 </Description>
 <InputEncoding>UTF-8</InputEncoding>
 <Image width="16" height="16" type="images/tabLogo"></Image>
-<Url type="text/html" template="http://www.team955.org/opr/?search={searchTerms}"/>
+<Url type="text/html" method="GET" template="http://www.team955.org/opr/?search={searchTerms}"/>
 </OpenSearchDescription>
