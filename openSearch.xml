@@ -1,3 +1,4 @@
+<!--
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
 <ShortName>OPR Calculator</ShortName>
 <Description>
@@ -6,4 +7,21 @@ OPR Calculator
 <InputEncoding>UTF-8</InputEncoding>
 <Image width="16" height="16" type="images/tabLogo"></Image>
 <Url type="text/html" method="GET" template="http://www.team955.org/opr/?search={searchTerms}"/>
+</OpenSearchDescription>-->
+
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+<ShortName>adrianbanks</ShortName>
+<LongName>Search adrianbanks.co.uk</LongName>
+<Description>Search adrianbanks.co.uk</Description>
+<Developer>Adrian Banks</Developer>
+<Attribution>Copyright adrianbanks.co.uk</Attribution>
+<AdultContent>false</AdultContent>
+<Language>en-us</Language>
+<InputEncoding>UTF-8</InputEncoding>
+<OutputEncoding>UTF-8</OutputEncoding>
+<Image width="16" height="16" type="image/x-icon">http://www.adrianbanks.co.uk/favicon.ico</Image>
+<Url type="text/html" method="GET" template="http://www.adrianbanks.co.uk/?s={searchTerms}"/>
+<Url type="application/x-suggestions+json" template="http://ff.search.yahoo.com/gossip?output=fxjson&command={searchTerms}"/>
+<Query role="example" searchTerms="msdn"/>
+<moz:SearchForm>http://www.adrianbanks.co.uk</moz:SearchForm>
 </OpenSearchDescription>
