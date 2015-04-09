@@ -27,11 +27,16 @@ var $gui = {};
 // Data for table
 var inputVal = "";
 var tableData = { header: [], data: [], dataInc: true };
-var tableModes = { team: 0, event: 1, teamsAttending: 2 };
+var tableModes = { team: 0, event: 1, teamsAttending: 2, global: 3 };
 var currTableMode;
 var appendToHistory = true;
 var eventStatsTable;
 var teamsOPR = { teams: [], needed: 0, table: null };
+
+// Data for global teams opr
+var getGlobalOPRData = false;
+var maxInProgress = 250;
+var currTeamIndex = 0;
 
 // Called when the document has been loaded once
 $(document).ready(init);
@@ -43,13 +48,13 @@ function init()
 	setTeamNames();
 	setActiveTeams();
 	
-	var autoCompleteSource = [];
+	var autoCompleteSource = [{ label: "Global Rankings", category: "Stats" }];
 	
 	for(var i = 0; i < eventNames.length; i++)
 		autoCompleteSource.push({ label: eventNames[i], category: "Events" });
 	
 	for(var i = 0; i < activeTeams.length; i++)
-			autoCompleteSource.push({ label: activeTeams[i] + " | " + teamNames[activeTeams[i] - 1], category: "Teams" });
+		autoCompleteSource.push({ label: activeTeams[i] + " | " + teamNames[activeTeams[i] - 1], category: "Teams" });
 		
 	$gui.header = $("#header");
 	$gui.rowHeaderTable = $("#rowHeaderTable")[0];
@@ -99,7 +104,7 @@ function init()
 			var results = $.ui.autocomplete.filter(autoCompleteSource, request.term);
 
 			var predicate = function () {
-				var counter = { Teams: 0, Events: 0 };
+				var counter = { Stats: 0, Teams: 0, Events: 0 };
 				var fn = function(item) {
 					counter[item.category] += 1;
 					return (counter[item.category] <= 5);
@@ -150,7 +155,7 @@ function init()
 		$gui.eventCodeInput.blur();
 		var input = $gui.eventCodeInput.val().toLowerCase();
 		var intInput = parseInt(input, 10);
-
+		
 		try
 		{
 			if(intInput)
@@ -159,6 +164,12 @@ function init()
 				setTeam(intInput);
 			}
 
+			else if(input === "global rankings")
+			{
+				currTableMode = tableModes.global;
+				getGlobalOprs();
+			}
+			
 			else
 			{
 				currTableMode = tableModes.event;
@@ -244,6 +255,9 @@ function processURLParameter()
 				if(intVal && teamNames[intVal - 1])
 					val += " | " + teamNames[intVal - 1];
 				
+				else if(val === "global")
+					val = "Global Rankings";
+					
 				else
 					for(var j = 0; j < eventCodes.length; j++)
 					{
@@ -392,15 +406,9 @@ function showTeamsAttendingEvent()
 
 			if(sorted)
 			{
+				// Team number, team name, events a team played, highest opr
 				for(var i = 0; i <  teamsOPR.needed; i++)
-				{
-					var newData = [];
-
-					for(var j in teamsOPR.teams[i])
-						newData.push(teamsOPR.teams[i][j]);
-
-					data.push(newData);
-				}
+					data.push([teamsOPR.teams[i].number, teamsOPR.teams[i].teamName, teamsOPR.teams[i].eventsPlayed, teamsOPR.teams[i].highestData[6]]);
 
 				break;
 			}
@@ -421,7 +429,56 @@ function checkTeamsOPR()
 		return;
 	}
 	
-	showTeamsAttendingEvent();
+	if(currTableMode === tableModes.teamsAttending)
+		showTeamsAttendingEvent();
+	
+	else if(currTableMode === tableModes.global)
+		teamsGlobalDataLoaded();
+}
+
+// Saves the teams global data into a .js file
+function teamsGlobalDataLoaded()
+{
+	var header =
+	[[
+			"Team #",
+			"Events Played",
+			"Auto OPR",
+			"Bin OPR",
+			"Coop OPR",
+			"Litter OPR",
+			"Tote OPR",
+			"Contribution %",
+			"Foul ADJ OPR"	
+	]];
+	
+	var data = [];
+	
+	for(var i = 0; i < teamsOPR.teams.length; i++)
+		data.push([teamsOPR.teams[i].number, teamsOPR.teams[i].eventsPlayed].concat(teamsOPR.teams[i].highestData));
+	
+	while(true)
+	{
+		var sorted = true;
+		
+		for(var i = 0; i < data.length - 1; i++)
+		{
+			if(data[i][data[0].length - 1] < data[i + 1][data[0].length - 1])
+			{
+				var tmp = data[i];
+				data[i] = data[i + 1];
+				data[i + 1] = tmp;
+				sorted = false;
+			}
+		}
+		
+		if(sorted)
+			break;
+	}
+	
+	var table = { header: header, data: data };
+	var str = 'var globalTeamData = ' + JSON.stringify(table) + ";";
+	saveFile("teamsGlobalData.js", str);
 }
 
 // Gets data from a team
@@ -449,8 +506,8 @@ function setTeam(teamNumber)
 		]];
 
 		var data = [];
+		var highestData = [0, 0, 0, 0, 0, 0, 0];
 		var eventsPlayed = 0;
-		var highestOPR = 0;
 		
 		for(var i = 0; i < eventRankingsData.length; i++)
 		{
@@ -468,8 +525,9 @@ function setTeam(teamNumber)
 			{
 				eventsPlayed++;
 				
-				if(newData[header[0].length - 1] > highestOPR)
-					highestOPR = newData[header[0].length - 1];
+				for(var j = 2; j < newData.length; j++)
+					if(newData[j] > highestData[j - 2])
+						highestData[j - 2] = newData[j];
 			}
 			
 			else
@@ -496,8 +554,13 @@ function setTeam(teamNumber)
 			appendToHistory = true;
 		}
 		
-		else if(currTableMode === tableModes.teamsAttending || currTableMode === tableModes.event)
-			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestOPR: highestOPR });
+		else if(currTableMode === tableModes.teamsAttending || currTableMode === tableModes.event || currTableMode === tableModes.global)
+		{
+			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestData: highestData });
+			
+			if(currTableMode === tableModes.global && currTeamIndex < activeTeams.length)
+				setTeam(activeTeams[currTeamIndex++]);
+		}
 	}
 	
 	var loadTeamData = function()
@@ -570,7 +633,15 @@ function setTeam(teamNumber)
 // Creates and displays all the tables
 function createTables(header, data)
 {
-	$gui.eventTheBlueAlliance.show();
+	if(currTableMode === tableModes.global)
+	{
+		$gui.eventTheBlueAlliance.hide();
+		$gui.eventStats.hide();
+		$gui.eventTeamsAttending.hide();
+	}
+	
+	else
+		$gui.eventTheBlueAlliance.show();
 	
 	if(currTableMode === tableModes.team)
 	{
@@ -738,6 +809,9 @@ function update(eventRankingsData, matchesData)
 			{
 				var teamNumber =  parseInt(matchesData[i].alliances.red.teams[j].substr(3), 10);
 
+				if(typeof(teamsIndex[teamNumber]) === "undefined")
+					break;
+				
 				matchesMatrixArray[teamsIndex[teamNumber]][(matchNumber - 1) * 2] = 1;
 				teamsParticipationMatrixArray[(matchNumber - 1) * 2][teamsIndex[teamNumber]] = 1;
 				
@@ -750,7 +824,10 @@ function update(eventRankingsData, matchesData)
 			for(var j = 0; j < matchesData[i].alliances.blue.teams.length; j++)
 			{
 				var teamNumber =  parseInt(matchesData[i].alliances.blue.teams[j].substr(3), 10);
-
+				
+				if(typeof(teamsIndex[teamNumber]) === "undefined")
+					break;
+				
 				matchesMatrixArray[teamsIndex[teamNumber]][((matchNumber - 1) * 2) + 1] = 1;
 				teamsParticipationMatrixArray[((matchNumber - 1) * 2) + 1][teamsIndex[teamNumber]] = 1;
 				
@@ -942,14 +1019,20 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 	var $table = document.createElement("table");
 	$table.setAttribute("id", "table");
 	$table.classList.add("table");
+	var docFrag = document.createDocumentFragment();
+	docFrag.appendChild($table);
 	var rowDataWidth = 50;
 	var nonRowDataWidth = (1114 / newDataTable[0].length) + (newDataTable[0].length === 4 ? 3.125 : -1.7);
 	var tableCellWidth = (isRowTable ? rowDataWidth : nonRowDataWidth) + "px";
-
+	var tableRow = document.createElement("tr");
+	var tableCol = document.createElement("td");
+	var rowHTML = "";
+	
 	// Row
 	for(var i = 0; i < newDataTable.length; i++)
 	{
-		var newRow = document.createElement("tr");
+		var colHTML = "";
+		var newRow = tableRow.cloneNode();
 		newRow.classList.add("tableRow");
 		
 		if((startDark && i % 2 == 0) || (!startDark && i % 2 != 0))
@@ -961,7 +1044,7 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 			var addClickClasses = false;
 			var titleData = "";
 			var valueData = "";
-			var newCol = document.createElement("td");
+			var newCol = tableCol.cloneNode();
 			newDataTable[i][j] = isNaN(newDataTable[i][j]) ? newDataTable[i][j] : zero(round(newDataTable[i][j]));
 			
 			if(i === 0 && firstRowBolded)
@@ -1006,6 +1089,13 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 					valueData = newDataTable[i][0];
 				}
 
+				else if(currTableMode === tableModes.global && j === 0)
+				{
+					addClickClasses = true;
+					titleData = teamNames[newDataTable[i][0] - 1];
+					valueData = newDataTable[i][0];
+				}
+				
 				if(addClickClasses)
 				{
 					newCol.classList.add("button");
@@ -1018,13 +1108,15 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 			newCol.setAttribute("value", valueData);
 			newCol.classList.add("tableCell");
 			newCol.innerHTML = newDataTable[i][j];
-			newRow.appendChild(newCol);
+			colHTML += newCol.outerHTML;
 		}
 		
-		$table.appendChild(newRow);
+		newRow.innerHTML = colHTML;
+		rowHTML += newRow.outerHTML;
 	}
 
-	$tableContainer.innerHTML = $table.outerHTML;
+	$table.innerHTML = rowHTML;
+	$tableContainer.innerHTML = docFrag.getElementById("table").outerHTML;
 	
 	if(firstRowBolded && !isRowTable)
 		$(".tableCellHeader").click(sortDataTable);
@@ -1201,6 +1293,35 @@ function getAllActiveTeams()
 					saveFile("activeTeams.txt", activeTeams);
 			});
 		}();
+	}
+}
+
+// Gets every teams highest oprs
+function getGlobalOprs()
+{
+	if(!getGlobalOPRData)
+	{
+		if(appendToHistory)
+			window.history.pushState("", "", "?search=global");
+
+		appendToHistory = true;
+		
+		tableData.header = globalTeamData.header;
+		tableData.data = globalTeamData.data;
+		createTables(tableData.header, tableData.data);
+	}
+		
+	else
+	{
+		console.log("Getting all team OPRS");
+		teamsOPR.needed = activeTeams.length;
+		teamsOPR.table = null;
+
+		for(currTeamIndex = 0; currTeamIndex < maxInProgress && currTeamIndex < activeTeams.length; currTeamIndex++)
+			setTeam(activeTeams[currTeamIndex]);
+
+		checkTeamsOPR();
+		getGlobalOPRData = false;
 	}
 }
 
