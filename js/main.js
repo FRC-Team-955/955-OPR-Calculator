@@ -26,7 +26,7 @@ var $gui = {};
 
 // Data for table
 var inputVal = "";
-var tableData = { header: [], data: [], dataInc: true };
+var tableData = { header: [], data: [], dataInc: true, prevSortColIndex: null };
 var tableModes = { team: 0, event: 1, teamsAttending: 2, global: 3 };
 var currTableMode;
 var appendToHistory = true;
@@ -188,6 +188,8 @@ function init()
 		{
 			teamsOPR.table.header = tableData.header;
 			teamsOPR.table.data = tableData.data;
+			teamsOPR.table.dataInc = tableData.dataInc;
+			teamsOPR.table.prevSortColIndex = tableData.prevSortColIndex;
 			currTableMode = tableModes.event;
 			createTables(eventStatsTable.header, eventStatsTable.data);
 		}
@@ -200,6 +202,8 @@ function init()
 			changeToLoadingCursor();
 			eventStatsTable.header = tableData.header;
 			eventStatsTable.data = tableData.data;
+			eventStatsTable.dataInc = tableData.dataInc;
+			eventStatsTable.prevSortColIndex = tableData.prevSortColIndex;
 			currTableMode = tableModes.teamsAttending;
 			checkTeamsOPR();
 		}
@@ -663,6 +667,12 @@ function createTables(header, data)
 	
 	tableData.header = header;
 	tableData.data = data;
+	tableData.dataInc = [];
+	tableData.prevSortColIndex = null;
+	
+	for(var i = 0; i < tableData.data[0].length; i++)
+		tableData.dataInc[i] = true;
+	
 	var rowHeaderTable = [[]];
 	var rowDataTable = [[]];
 
@@ -1140,7 +1150,6 @@ function sortDataTable(e, inc)
 		return;
 	
 	var colIndex = e.target.id;
-	tableData.dataInc = !tableData.dataInc;
 	
 	while(true)
 	{
@@ -1151,7 +1160,7 @@ function sortDataTable(e, inc)
 			var currVal = tableData.data[i][colIndex];
 			var nextVal = tableData.data[i + 1][colIndex];
 			
-			if((tableData.dataInc && currVal < nextVal) || (!tableData.dataInc && currVal > nextVal))
+			if((tableData.dataInc[colIndex] && currVal < nextVal) || (!tableData.dataInc[colIndex] && currVal > nextVal))
 			{
 				var tmp = tableData.data[i];
 				tableData.data[i] = tableData.data[i + 1];
@@ -1164,6 +1173,12 @@ function sortDataTable(e, inc)
 			break;
 	}
 	
+	tableData.dataInc[colIndex] = !tableData.dataInc[colIndex];
+	
+	if(tableData.prevSortColIndex && tableData.prevSortColIndex !== colIndex)
+		tableData.dataInc[tableData.prevSortColIndex] = true;
+	
+	tableData.prevSortColIndex = colIndex;
 	makeTable($gui.dataTable, tableData.data, false, false, false);
 }
 
