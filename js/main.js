@@ -481,7 +481,7 @@ function teamsGlobalDataLoaded()
 	}
 	
 	var table = { header: header, data: data };
-	var str = 'var globalTeamData = ' + JSON.stringify(table) + ";";
+	var str = 'var globalTeamData = ' + JSON.stringify(table, null, 4) + ";";
 	saveFile("teamsGlobalData.js", str);
 }
 
