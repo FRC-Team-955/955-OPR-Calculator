@@ -563,7 +563,10 @@ function setTeam(teamNumber)
 			teamsOPR.teams.push({ number: teamNumber, teamName: teamNames[teamNumber - 1], eventsPlayed: eventsPlayed, highestData: highestData });
 			
 			if(currTableMode === tableModes.global && currTeamIndex < activeTeams.length)
+			{
+				console.log(teamNumber + " : " + currTeamIndex + " : " + activeTeams.length);
 				setTeam(activeTeams[currTeamIndex++]);
+			}
 		}
 	}
 	
@@ -969,7 +972,7 @@ function update(eventRankingsData, matchesData)
 
 		// Column
 		for(var j = 0; j < dataMatrix.length; j++)
-			dataTable[i][j] = dataMatrix[j].get(i, 0);
+			dataTable[i][j] = isNaN(dataMatrix[j].get(i, 0)) ? dataMatrix[j].get(i, 0) : zero(round(dataMatrix[j].get(i, 0)));
 	}
 	
 	return { header: headerTable, data: dataTable };
@@ -1055,7 +1058,6 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 			var titleData = "";
 			var valueData = "";
 			var newCol = tableCol.cloneNode();
-			newDataTable[i][j] = isNaN(newDataTable[i][j]) ? newDataTable[i][j] : zero(round(newDataTable[i][j]));
 			
 			if(i === 0 && firstRowBolded)
 			{
