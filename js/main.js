@@ -1146,34 +1146,40 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 }
 
 // Sorts data table
-function sortDataTable(e, inc)
+function sortDataTable(e)
 {	
 	if(tableData.data.length <= 1)
 		return;
 	
 	var colIndex = e.target.id;
+	var inc = tableData.dataInc[colIndex];
 	
-	while(true)
+	// Insertion sort
+	for(var i = 1; i < tableData.data.length; i++)
 	{
-		var sorted = true;
+		var j = i;
 		
-		for(var i = 0; i < tableData.data.length - 1; i++)
-		{
-			var currVal = tableData.data[i][colIndex];
-			var nextVal = tableData.data[i + 1][colIndex];
-			
-			if((tableData.dataInc[colIndex] && currVal < nextVal) || (!tableData.dataInc[colIndex] && currVal > nextVal))
-			{
-				var tmp = tableData.data[i];
-				tableData.data[i] = tableData.data[i + 1];
-				tableData.data[i + 1] = tmp;
-				sorted = false;
-			}
-		}
+		while(j > 0 && (inc ? tableData.data[j - 1][colIndex] < tableData.data[i][colIndex] : tableData.data[j - 1][colIndex] > tableData.data[i][colIndex]))
+			j--;
 		
-		if(sorted)
-			break;
+		var tmp = tableData.data[i];
+		
+		for(var k = i; k > j; k--)
+			tableData.data[k] = tableData.data[k - 1];
+		
+		tableData.data[j] = tmp;
 	}
+	
+	$($gui.dataTable).find("td").each((function()
+   	{
+		var i = 0;
+		
+		return function()
+		{
+			$(this).html(tableData.data[i % tableData.data.length][i % tableData.data[0].length]);
+			i++;
+		};
+	})());
 	
 	tableData.dataInc[colIndex] = !tableData.dataInc[colIndex];
 	
@@ -1181,7 +1187,6 @@ function sortDataTable(e, inc)
 		tableData.dataInc[tableData.prevSortColIndex] = true;
 	
 	tableData.prevSortColIndex = colIndex;
-	makeTable($gui.dataTable, tableData.data, false, false, false);
 }
 
 // Rounds the number to the nearest hundreths place
