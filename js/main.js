@@ -1170,23 +1170,13 @@ function sortDataTable(e)
 		tableData.data[j] = tmp;
 	}
 	
-	$($gui.dataTable).find("td").each((function()
-   	{
-		var i = 0;
-		
-		return function()
-		{
-			$(this).html(tableData.data[i % tableData.data.length][i % tableData.data[0].length]);
-			i++;
-		};
-	})());
-	
 	tableData.dataInc[colIndex] = !tableData.dataInc[colIndex];
 	
 	if(tableData.prevSortColIndex && tableData.prevSortColIndex !== colIndex)
 		tableData.dataInc[tableData.prevSortColIndex] = true;
 	
 	tableData.prevSortColIndex = colIndex;
+	makeTable($gui.dataTable, tableData.data, false, false, false);
 }
 
 // Rounds the number to the nearest hundreths place
