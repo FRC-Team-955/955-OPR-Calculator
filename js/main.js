@@ -1252,9 +1252,12 @@ function getAllEvents()
 
 	for(var i = 0; i < events.length; i++)
 	{
-		eventNames[i] = events[i].name;
+		if(events[i].event_code === "ctss" || events[i].event_code === "nhwz")
+			continue;
+		
+		//eventNames[i] = events[i].name;
 		strEventNames += '"' + events[i].name + '",\n';
-		eventCodes[i] = events[i].event_code;
+		//eventCodes[i] = events[i].event_code;
 		strEventCodes += '"' + events[i].event_code + '",\n';
 	}
 		
