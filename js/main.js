@@ -390,7 +390,7 @@ function showTeamsAttendingEvent()
 {
 	if(teamsOPR.table === null)
 	{
-		var header = [["Team #", "Team Name", "Events Played", "Highest Foul ADJ OPR"]];
+		var header = [["Team #", "Team Name", "Events Played", "Highest Coop OPR", "Highest Foul ADJ OPR"]];
 		var data = [];
 
 		while(true)
@@ -412,7 +412,7 @@ function showTeamsAttendingEvent()
 			{
 				// Team number, team name, events a team played, highest opr
 				for(var i = 0; i <  teamsOPR.needed; i++)
-					data.push([teamsOPR.teams[i].number, teamsOPR.teams[i].teamName, teamsOPR.teams[i].eventsPlayed, teamsOPR.teams[i].highestData[6]]);
+					data.push([teamsOPR.teams[i].number, teamsOPR.teams[i].teamName, teamsOPR.teams[i].eventsPlayed, teamsOPR.teams[i].highestData[2], teamsOPR.teams[i].highestData[6]]);
 
 				break;
 			}
@@ -1035,7 +1035,7 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 	var docFrag = document.createDocumentFragment();
 	docFrag.appendChild($table);
 	var rowDataWidth = 50;
-	var nonRowDataWidth = (1114 / newDataTable[0].length) + (newDataTable[0].length === 4 ? 3.125 : -1.7);
+	var nonRowDataWidth = (1114 / newDataTable[0].length) + (newDataTable[0].length === 5 ? 1.25 : -1.7);
 	var tableCellWidth = (isRowTable ? rowDataWidth : nonRowDataWidth) + "px";
 	var tableRow = document.createElement("tr");
 	var tableCol = document.createElement("td");
