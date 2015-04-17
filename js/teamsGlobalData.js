@@ -9,7 +9,7 @@ var globalTeamData = {
             "Litter OPR",
             "Tote OPR",
             "Contribution %",
-            "Foul ADJ OPR"
+            "OPR (No Coop)"
         ]
     ],
     "data": [
