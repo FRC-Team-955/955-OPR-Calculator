@@ -38,6 +38,11 @@ var getGlobalOPRData = false;
 var maxInProgress = 250;
 var currTeamIndex = 0;
 
+// Variable for if we should save the division data
+var saveDivisionData = false;
+var globalEventCode = "";
+var strDivisionData = "var divisionData = {};\n\n";
+
 // Called when the document has been loaded once
 $(document).ready(init);
 
@@ -314,6 +319,7 @@ function setEvent(eventCode)
 	}
 	
 	inputVal = eventCode;
+	globalEventCode = eventCode;
 	var eventRankingsData = [];
 	var matchesData = [];
 	var table = [];
@@ -324,7 +330,6 @@ function setEvent(eventCode)
 	var eventDataLoaded = function()
 	{
 		table = update(eventRankingsData, matchesData);
-		getTeamsAttendingEvent(eventCode);
 		
 		if(table.data[0].length === 0)
 			currTableMode = tableModes.teamsAttending;
@@ -339,6 +344,7 @@ function setEvent(eventCode)
 			window.history.pushState("", "", "?search=" + eventCode);
 		
 		appendToHistory = true;
+		getTeamsAttendingEvent(eventCode);
 	}
 	
 	var loadEventData = function()
@@ -363,6 +369,15 @@ function setEvent(eventCode)
 // Gets all the teams attending an event
 function getTeamsAttendingEvent(eventCode)
 {
+	if(divisionData[eventCode])
+	{
+		teamsOPR.table = { header: null, data: null };
+		teamsOPR.table.header = divisionData[eventCode].header;
+		teamsOPR.table.data = divisionData[eventCode].data;
+		createTables(teamsOPR.table.header, teamsOPR.table.data);
+		return;
+	}
+	
 	var teamsAtEvent;
 	teamsOPR.teams = [];
 	teamsOPR.table = null;
@@ -390,7 +405,7 @@ function showTeamsAttendingEvent()
 {
 	if(teamsOPR.table === null)
 	{
-		var header = [["Team #", "Team Name", "Events Played", "Highest Coop OPR", "Highest Foul ADJ OPR"]];
+		var header = [["Team #", "Team Name", "Events Played", "Highest Coop OPR", "Highest OPR (No Coop)"]];
 		var data = [];
 
 		while(true)
@@ -420,6 +435,9 @@ function showTeamsAttendingEvent()
 
 		teamsOPR.table = { header: header, data: data };
 	}
+	
+	if(saveDivisionData)
+		strDivisionData += 'divisionData["' + globalEventCode + '"] = '+ JSON.stringify(teamsOPR.table, null, 4) + ";\n\n";
 	
 	createTables(teamsOPR.table.header, teamsOPR.table.data);
 }
@@ -453,7 +471,7 @@ function teamsGlobalDataLoaded()
 			"Litter OPR",
 			"Tote OPR",
 			"Contribution %",
-			"Foul ADJ OPR"	
+			"OPR (No Coop)"	
 	]];
 	
 	var data = [];
@@ -506,7 +524,7 @@ function setTeam(teamNumber)
 			"Litter OPR",
 			"Tote OPR",
 			"Contribution %",
-			"Foul ADJ OPR"	
+			"OPR (No Coop)"	
 		]];
 
 		var data = [];
@@ -939,7 +957,7 @@ function update(eventRankingsData, matchesData)
 			"Litter OPR",
 			"Tote OPR",
 			"Contribution %",
-			"Foul ADJ OPR"
+			"OPR (No Coop)"
 		]
 	];
 
@@ -1338,6 +1356,11 @@ function getGlobalOprs()
 		checkTeamsOPR();
 		getGlobalOPRData = false;
 	}
+}
+
+function saveDivisionDataFile()
+{
+	saveFile("divisionData.js", strDivisionData);
 }
 
 function escapeRegExp(string)
