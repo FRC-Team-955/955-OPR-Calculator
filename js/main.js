@@ -372,12 +372,22 @@ function getTeamsAttendingEvent(eventCode)
 	if(divisionData[eventCode])
 	{
 		teamsOPR.table = { header: null, data: null };
-		teamsOPR.table.header = divisionData[eventCode].header;
-		teamsOPR.table.data = divisionData[eventCode].data;
-		createTables(teamsOPR.table.header, teamsOPR.table.data);
+		
+		if(divisionData[eventCode])
+		{
+			teamsOPR.table.header = divisionData[eventCode].header;
+			teamsOPR.table.data = divisionData[eventCode].data;
+		}
+		
+		teamsOPR.needed = teamsOPR.teams.length;
+		
+		if(currTableMode === tableModes.teamsAttending)
+			checkTeamsOPR();
+		
 		return;
 	}
 	
+	globalEventCode = eventCode;
 	var teamsAtEvent;
 	teamsOPR.teams = [];
 	teamsOPR.table = null;
@@ -405,7 +415,7 @@ function showTeamsAttendingEvent()
 {
 	if(teamsOPR.table === null)
 	{
-		var header = [["Team #", "Team Name", "Events Played", "Highest Coop OPR", "Highest OPR (No Coop)"]];
+		var header = [["Team #", "Team Name", "Events Played", "Highest Auto OPR", "Highest Coop OPR", "Highest OPR (No Coop)"]];
 		var data = [];
 
 		while(true)
@@ -427,7 +437,15 @@ function showTeamsAttendingEvent()
 			{
 				// Team number, team name, events a team played, highest opr
 				for(var i = 0; i <  teamsOPR.needed; i++)
-					data.push([teamsOPR.teams[i].number, teamsOPR.teams[i].teamName, teamsOPR.teams[i].eventsPlayed, teamsOPR.teams[i].highestData[2], teamsOPR.teams[i].highestData[6]]);
+					data.push
+					([
+						teamsOPR.teams[i].number,         // Team number
+						teamsOPR.teams[i].teamName,       // Team name
+						teamsOPR.teams[i].eventsPlayed,   // Events played
+						teamsOPR.teams[i].highestData[0], // Highest Auto OPR
+						teamsOPR.teams[i].highestData[2], // Highest Coop OPR
+						teamsOPR.teams[i].highestData[6]  // Highest OPR (No Coop)
+					]);
 
 				break;
 			}
@@ -437,7 +455,10 @@ function showTeamsAttendingEvent()
 	}
 	
 	if(saveDivisionData)
+	{
 		strDivisionData += 'divisionData["' + globalEventCode + '"] = '+ JSON.stringify(teamsOPR.table, null, 4) + ";\n\n";
+		console.log("Data Written to Variable");
+	}
 	
 	createTables(teamsOPR.table.header, teamsOPR.table.data);
 }
@@ -1053,7 +1074,7 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 	var docFrag = document.createDocumentFragment();
 	docFrag.appendChild($table);
 	var rowDataWidth = 50;
-	var nonRowDataWidth = (1114 / newDataTable[0].length) + (newDataTable[0].length === 5 ? 1.25 : -1.7);
+	var nonRowDataWidth = (1114 / newDataTable[0].length) + (newDataTable[0].length === 6 ? 0 : -1.7);
 	var tableCellWidth = (isRowTable ? rowDataWidth : nonRowDataWidth) + "px";
 	var tableRow = document.createElement("tr");
 	var tableCol = document.createElement("td");
@@ -1358,6 +1379,7 @@ function getGlobalOprs()
 	}
 }
 
+// Saves the division data into a js file
 function saveDivisionDataFile()
 {
 	saveFile("divisionData.js", strDivisionData);
