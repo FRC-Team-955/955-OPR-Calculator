@@ -341,14 +341,6 @@ divisionData["arc"] = {
             62.32
         ],
         [
-            2522,
-            "Royal Robotics",
-            3,
-            0.96,
-            13.24,
-            65.37
-        ],
-        [
             2605,
             "Sehome Seamonsters",
             3,
@@ -898,6 +890,14 @@ divisionData["new"] = {
             0.8,
             8.98,
             60.45
+        ],
+		[
+            2522,
+            "Royal Robotics",
+            3,
+            0.96,
+            13.24,
+            65.37
         ],
         [
             2607,
