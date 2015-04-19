@@ -568,9 +568,17 @@ function setTeam(teamNumber)
 			{
 				eventsPlayed++;
 				
-				for(var j = 2; j < newData.length; j++)
+				for(var j = 3; j < newData.length; j++)
+				{
 					if(newData[j] > highestData[j - 2])
+					{
 						highestData[j - 2] = newData[j];
+						
+						// If the new highest is the OPR (No Coop), update the highest Auto OPR
+						if(j === newData.length - 1)
+							highestData[0] = newData[2];
+					}
+				}
 			}
 			
 			else
