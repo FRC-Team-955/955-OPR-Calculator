@@ -16,7 +16,7 @@ divisionData["arc"] = {
             41,
             "RoboWarriors",
             2,
-            0,
+            0.16,
             12.16,
             6.67
         ],
@@ -32,7 +32,7 @@ divisionData["arc"] = {
             68,
             "Truck Town Thunder",
             4,
-            0,
+            2.26,
             5.2,
             69.09
         ],
@@ -40,7 +40,7 @@ divisionData["arc"] = {
             108,
             "SigmaC@T Robotic Team",
             2,
-            0,
+            1.5,
             0,
             25.41
         ],
@@ -96,7 +96,7 @@ divisionData["arc"] = {
             217,
             "ThunderChickens",
             4,
-            0.11,
+            0.24,
             17.76,
             40.63
         ],
@@ -120,7 +120,7 @@ divisionData["arc"] = {
             314,
             "The Megatron Oracles",
             4,
-            0,
+            1.06,
             8.67,
             80.96
         ],
@@ -128,7 +128,7 @@ divisionData["arc"] = {
             360,
             "The Revolution",
             3,
-            0.05,
+            0.3,
             4.56,
             45.79
         ],
@@ -136,7 +136,7 @@ divisionData["arc"] = {
             378,
             "The Circuit Stompers",
             2,
-            0,
+            0.38,
             11.2,
             20
         ],
@@ -144,7 +144,7 @@ divisionData["arc"] = {
             503,
             "Frog Force",
             4,
-            0,
+            0.84,
             8.54,
             46.41
         ],
@@ -184,7 +184,7 @@ divisionData["arc"] = {
             931,
             "Perpetual Chaos",
             2,
-            1.84,
+            2.55,
             13.75,
             17.55
         ],
@@ -200,7 +200,7 @@ divisionData["arc"] = {
             1089,
             "Team Mercury",
             3,
-            0.68,
+            2.07,
             14.95,
             40.92
         ],
@@ -208,7 +208,7 @@ divisionData["arc"] = {
             1310,
             "RUNNYMEDE ROBOTICS",
             2,
-            8.66,
+            9.01,
             16.89,
             47.5
         ],
@@ -216,7 +216,7 @@ divisionData["arc"] = {
             1322,
             "Genesee Robotics Area Youth Team (GRAYT)",
             3,
-            4.96,
+            5.16,
             17.99,
             24.86
         ],
@@ -240,7 +240,7 @@ divisionData["arc"] = {
             1640,
             "Sab-BOT-age",
             3,
-            0,
+            2.04,
             4.54,
             79.33
         ],
@@ -248,7 +248,7 @@ divisionData["arc"] = {
             1648,
             "G3 Robotics",
             2,
-            0,
+            0.46,
             7.15,
             23.3
         ],
@@ -256,7 +256,7 @@ divisionData["arc"] = {
             1700,
             "Gatorbotics",
             2,
-            0.53,
+            2.39,
             5.11,
             14.79
         ],
@@ -264,7 +264,7 @@ divisionData["arc"] = {
             1701,
             "RoboCubs",
             3,
-            0,
+            1,
             6.02,
             26.53
         ],
@@ -304,7 +304,7 @@ divisionData["arc"] = {
             2220,
             "Blue Twilight",
             3,
-            0.25,
+            0.65,
             8.28,
             15.01
         ],
@@ -336,7 +336,7 @@ divisionData["arc"] = {
             2383,
             "Ninjineers",
             3,
-            9.69,
+            10.38,
             14.53,
             62.32
         ],
@@ -344,7 +344,7 @@ divisionData["arc"] = {
             2605,
             "Sehome Seamonsters",
             3,
-            0.01,
+            2.04,
             6.37,
             44.85
         ],
@@ -360,7 +360,7 @@ divisionData["arc"] = {
             2655,
             "The Flying Platypi",
             2,
-            0.16,
+            2.24,
             12.88,
             22.68
         ],
@@ -368,7 +368,7 @@ divisionData["arc"] = {
             2848,
             "The All Sparks",
             2,
-            0,
+            4.35,
             1.21,
             17.47
         ],
@@ -376,7 +376,7 @@ divisionData["arc"] = {
             2907,
             "Lion Robotics",
             3,
-            0,
+            0.02,
             14.92,
             33.6
         ],
@@ -424,7 +424,7 @@ divisionData["arc"] = {
             3284,
             "Camdenton 4H LASER Team",
             2,
-            0,
+            0.05,
             9.83,
             34.57
         ],
@@ -440,7 +440,7 @@ divisionData["arc"] = {
             3357,
             "COMETS",
             2,
-            0,
+            0.08,
             13.54,
             20.75
         ],
@@ -448,7 +448,7 @@ divisionData["arc"] = {
             3602,
             "RoboMos",
             3,
-            0.26,
+            2.53,
             12.68,
             57.31
         ],
@@ -512,7 +512,7 @@ divisionData["arc"] = {
             4451,
             "ROBOTZ Garage",
             2,
-            0,
+            0.27,
             5.86,
             52.22
         ],
@@ -536,7 +536,7 @@ divisionData["arc"] = {
             5162,
             "The Big Red Theory",
             2,
-            0,
+            0.41,
             5.02,
             14.78
         ],
@@ -544,7 +544,7 @@ divisionData["arc"] = {
             5212,
             "TAMSformers Robotics",
             2,
-            0,
+            0.34,
             8.86,
             0
         ],
@@ -552,7 +552,7 @@ divisionData["arc"] = {
             5403,
             "Aluminosity",
             3,
-            0,
+            0.32,
             10.35,
             36.87
         ],
@@ -576,7 +576,7 @@ divisionData["arc"] = {
             5536,
             "TITANS",
             2,
-            0,
+            0.61,
             7.36,
             7.09
         ],
@@ -600,7 +600,7 @@ divisionData["arc"] = {
             5667,
             "Team AIR",
             2,
-            0,
+            1.58,
             8.41,
             16.3
         ],
@@ -639,7 +639,7 @@ divisionData["new"] = {
             25,
             "Raider Robotix",
             4,
-            0,
+            1.45,
             13.42,
             43.01
         ],
@@ -663,7 +663,7 @@ divisionData["new"] = {
             118,
             "Robonauts",
             3,
-            18.15,
+            19.73,
             29.83,
             113.97
         ],
@@ -671,7 +671,7 @@ divisionData["new"] = {
             133,
             "B.E.R.T",
             3,
-            0.9,
+            1.32,
             17.62,
             36.69
         ],
@@ -695,7 +695,7 @@ divisionData["new"] = {
             190,
             "Gompei and the H.E.R.D.",
             3,
-            0,
+            0.12,
             6.35,
             32.07
         ],
@@ -727,7 +727,7 @@ divisionData["new"] = {
             321,
             "RoboLancers",
             4,
-            0,
+            1.17,
             14.67,
             27.02
         ],
@@ -759,7 +759,7 @@ divisionData["new"] = {
             587,
             "Hedgehogs",
             2,
-            0,
+            0.03,
             5.84,
             13.57
         ],
@@ -767,7 +767,7 @@ divisionData["new"] = {
             932,
             "Circuit Chargers",
             2,
-            0,
+            2.1,
             0,
             23.5
         ],
@@ -791,7 +791,7 @@ divisionData["new"] = {
             1111,
             "The Power Hawks",
             2,
-            0,
+            0.26,
             1,
             18.47
         ],
@@ -799,7 +799,7 @@ divisionData["new"] = {
             1466,
             "Webb Robotics",
             2,
-            0.03,
+            1.53,
             11.22,
             34.75
         ],
@@ -807,7 +807,7 @@ divisionData["new"] = {
             1671,
             "Buchanan Bird Brains",
             2,
-            0,
+            0.21,
             5.17,
             93.11
         ],
@@ -815,7 +815,7 @@ divisionData["new"] = {
             1678,
             "Citrus Circuits",
             3,
-            15.57,
+            17.29,
             14.19,
             93.15
         ],
@@ -847,7 +847,7 @@ divisionData["new"] = {
             1918,
             "NC GEARS",
             3,
-            0,
+            1.07,
             8.93,
             62.05
         ],
@@ -855,7 +855,7 @@ divisionData["new"] = {
             1983,
             "Skunk Works Robotics",
             4,
-            0,
+            0.2,
             6.06,
             83.31
         ],
@@ -871,7 +871,7 @@ divisionData["new"] = {
             2158,
             "ausTIN CANs",
             2,
-            0,
+            0.25,
             16.11,
             24.26
         ],
@@ -879,7 +879,7 @@ divisionData["new"] = {
             2339,
             "Robolopes",
             2,
-            0.33,
+            1.62,
             10.66,
             21.03
         ],
@@ -887,7 +887,7 @@ divisionData["new"] = {
             2468,
             "Team Appreciate",
             3,
-            0,
+            0.8,
             8.98,
             60.45
         ],
@@ -895,7 +895,7 @@ divisionData["new"] = {
             2522,
             "Royal Robotics",
             3,
-            0,
+            0.96,
             13.24,
             65.37
         ],
@@ -903,7 +903,7 @@ divisionData["new"] = {
             2607,
             "The Fighting RoboVikings",
             3,
-            0,
+            2.28,
             22.5,
             50.59
         ],
@@ -911,7 +911,7 @@ divisionData["new"] = {
             2761,
             "IronHorse Robotics",
             2,
-            0,
+            0.27,
             0.13,
             20.18
         ],
@@ -919,7 +919,7 @@ divisionData["new"] = {
             2877,
             "LigerBots",
             3,
-            0,
+            1.19,
             22.42,
             45.38
         ],
@@ -943,7 +943,7 @@ divisionData["new"] = {
             3130,
             "The East Ridge Robotic Ominous RaptorS - the ERRORS",
             2,
-            0,
+            0.69,
             24.72,
             65.96
         ],
@@ -959,7 +959,7 @@ divisionData["new"] = {
             3171,
             "P.R.I.D.E",
             2,
-            0.1,
+            0.24,
             12.66,
             47.52
         ],
@@ -967,7 +967,7 @@ divisionData["new"] = {
             3310,
             "Black Hawk Robotics",
             3,
-            0,
+            0.58,
             11.1,
             46.52
         ],
@@ -975,7 +975,7 @@ divisionData["new"] = {
             3314,
             "Mechanical Mustangs",
             5,
-            0,
+            0.55,
             11.81,
             29.48
         ],
@@ -991,7 +991,7 @@ divisionData["new"] = {
             3467,
             "The Windham Windup",
             3,
-            0,
+            1.01,
             19.29,
             44.01
         ],
@@ -1015,7 +1015,7 @@ divisionData["new"] = {
             3641,
             "The Flying Toasters",
             4,
-            0.16,
+            0.21,
             9.95,
             64.6
         ],
@@ -1031,7 +1031,7 @@ divisionData["new"] = {
             3785,
             "Gila Monsters",
             2,
-            0,
+            0.29,
             0.52,
             16.46
         ],
@@ -1047,7 +1047,7 @@ divisionData["new"] = {
             3940,
             "CyberTooth",
             3,
-            0.64,
+            0.9,
             19.22,
             33.26
         ],
@@ -1103,7 +1103,7 @@ divisionData["new"] = {
             4522,
             "Team SCREAM",
             3,
-            0.04,
+            0.8,
             9.77,
             53.28
         ],
@@ -1119,7 +1119,7 @@ divisionData["new"] = {
             4575,
             "The Tin Mints",
             3,
-            0,
+            0.51,
             8.93,
             22.21
         ],
@@ -1127,7 +1127,7 @@ divisionData["new"] = {
             4678,
             "CyberCavs",
             2,
-            8.5,
+            15.95,
             9.73,
             53.99
         ],
@@ -1207,7 +1207,7 @@ divisionData["new"] = {
             5489,
             "CSI Golden Eagle Robotics",
             2,
-            0.59,
+            1.38,
             8.5,
             25.58
         ],
@@ -1215,7 +1215,7 @@ divisionData["new"] = {
             5495,
             "Aluminati",
             3,
-            0.41,
+            1.17,
             8.49,
             26.04
         ],
@@ -1239,7 +1239,7 @@ divisionData["new"] = {
             5529,
             "Visalia Vanquishers",
             2,
-            0,
+            1.66,
             8.59,
             8.49
         ],
@@ -1278,7 +1278,7 @@ divisionData["cur"] = {
             57,
             "Leopards",
             2,
-            0,
+            1.14,
             13.35,
             24.5
         ],
@@ -1310,7 +1310,7 @@ divisionData["cur"] = {
             120,
             "Cleveland's Team",
             3,
-            0.3,
+            0.35,
             5.84,
             51.52
         ],
@@ -1366,7 +1366,7 @@ divisionData["cur"] = {
             303,
             "TEST Team 303",
             4,
-            0,
+            0.27,
             18.91,
             78.7
         ],
@@ -1406,7 +1406,7 @@ divisionData["cur"] = {
             610,
             "The Coyotes",
             2,
-            0,
+            0.31,
             15.83,
             33.32
         ],
@@ -1422,7 +1422,7 @@ divisionData["cur"] = {
             701,
             "RoboVikes",
             3,
-            0,
+            2.78,
             15.2,
             74.99
         ],
@@ -1438,7 +1438,7 @@ divisionData["cur"] = {
             708,
             "Hatters Robotics",
             4,
-            0,
+            1.36,
             18.5,
             19.86
         ],
@@ -1486,7 +1486,7 @@ divisionData["cur"] = {
             1156,
             "Under Control",
             2,
-            0.15,
+            1.29,
             7.8,
             50.85
         ],
@@ -1502,7 +1502,7 @@ divisionData["cur"] = {
             1318,
             "Issaquah Robotics Society",
             4,
-            1.63,
+            4.56,
             0,
             65.44
         ],
@@ -1518,7 +1518,7 @@ divisionData["cur"] = {
             1506,
             "Metal Muscle",
             3,
-            0.03,
+            0.07,
             14.11,
             38.49
         ],
@@ -1534,7 +1534,7 @@ divisionData["cur"] = {
             1622,
             "Team Spyder",
             3,
-            0,
+            0.29,
             24.63,
             26.63
         ],
@@ -1550,7 +1550,7 @@ divisionData["cur"] = {
             1923,
             "The MidKnight Inventors",
             4,
-            0,
+            0.79,
             7,
             39.1
         ],
@@ -1566,7 +1566,7 @@ divisionData["cur"] = {
             2457,
             "The Law",
             2,
-            0,
+            0.05,
             2.29,
             48.48
         ],
@@ -1574,7 +1574,7 @@ divisionData["cur"] = {
             2557,
             "SOTAbots",
             4,
-            0,
+            0.62,
             5.01,
             25.94
         ],
@@ -1622,7 +1622,7 @@ divisionData["cur"] = {
             3309,
             "Friarbots",
             3,
-            13.97,
+            15.05,
             13.99,
             83.66
         ],
@@ -1646,7 +1646,7 @@ divisionData["cur"] = {
             3663,
             "CPR - Cedar Park Robotics",
             4,
-            0,
+            0.07,
             3.69,
             64.31
         ],
@@ -1654,7 +1654,7 @@ divisionData["cur"] = {
             3937,
             "Breakaway",
             2,
-            0.52,
+            1.37,
             2.24,
             46.75
         ],
@@ -1662,7 +1662,7 @@ divisionData["cur"] = {
             3959,
             "Morgan County Mech Tech",
             3,
-            0.49,
+            1.15,
             9.63,
             46.6
         ],
@@ -1694,7 +1694,7 @@ divisionData["cur"] = {
             4073,
             "Robo Kats",
             2,
-            0,
+            1.87,
             1.98,
             23.45
         ],
@@ -1702,7 +1702,7 @@ divisionData["cur"] = {
             4080,
             "Team Reboot",
             1,
-            0,
+            0.05,
             0,
             0
         ],
@@ -1798,7 +1798,7 @@ divisionData["cur"] = {
             5046,
             "Jacked Up Jackets",
             3,
-            0,
+            3.24,
             11.35,
             61.71
         ],
@@ -1814,7 +1814,7 @@ divisionData["cur"] = {
             5472,
             "Stallions",
             2,
-            0,
+            0.01,
             9.2,
             19.55
         ],
@@ -1862,7 +1862,7 @@ divisionData["cur"] = {
             5735,
             "Control Freaks",
             3,
-            0.4,
+            1.31,
             11.18,
             33.72
         ],
@@ -1893,7 +1893,7 @@ divisionData["gal"] = {
             1,
             "The Juggernauts",
             3,
-            0,
+            1.08,
             15.23,
             41.19
         ],
@@ -1901,7 +1901,7 @@ divisionData["gal"] = {
             27,
             "Team RUSH",
             4,
-            0.02,
+            0.43,
             12.62,
             47.53
         ],
@@ -1909,7 +1909,7 @@ divisionData["gal"] = {
             45,
             "TechnoKats Robotics Team",
             3,
-            0,
+            1.79,
             15.51,
             27.52
         ],
@@ -1917,7 +1917,7 @@ divisionData["gal"] = {
             102,
             "The Gearheads",
             3,
-            0.08,
+            1.49,
             4.44,
             14.79
         ],
@@ -1941,7 +1941,7 @@ divisionData["gal"] = {
             219,
             "Team Impact",
             4,
-            0,
+            0.3,
             13.58,
             40.62
         ],
@@ -1949,7 +1949,7 @@ divisionData["gal"] = {
             237,
             "Black Magic Robotics",
             3,
-            0,
+            1.21,
             18.81,
             22.83
         ],
@@ -1957,7 +1957,7 @@ divisionData["gal"] = {
             245,
             "Adambots",
             3,
-            0.2,
+            2.15,
             12.07,
             37.81
         ],
@@ -1989,7 +1989,7 @@ divisionData["gal"] = {
             492,
             "Titan Robotics Club",
             3,
-            0,
+            0.16,
             9.8,
             50.57
         ],
@@ -2021,7 +2021,7 @@ divisionData["gal"] = {
             597,
             "Wolverines",
             3,
-            0,
+            0.06,
             9.69,
             19.17
         ],
@@ -2045,7 +2045,7 @@ divisionData["gal"] = {
             862,
             "Lightning Robotics",
             4,
-            0,
+            0.36,
             17.08,
             40.11
         ],
@@ -2053,7 +2053,7 @@ divisionData["gal"] = {
             876,
             "Thunder Robotics",
             2,
-            0,
+            0.71,
             4.29,
             58.18
         ],
@@ -2061,7 +2061,7 @@ divisionData["gal"] = {
             967,
             "Iron Lions",
             2,
-            0,
+            0.43,
             0.6,
             34.72
         ],
@@ -2093,7 +2093,7 @@ divisionData["gal"] = {
             1477,
             "Texas Torque",
             3,
-            0,
+            0.39,
             17.3,
             25.79
         ],
@@ -2109,7 +2109,7 @@ divisionData["gal"] = {
             1547,
             "\"Where's Waldo?\"",
             2,
-            0,
+            2.65,
             9.27,
             6.98
         ],
@@ -2141,7 +2141,7 @@ divisionData["gal"] = {
             1690,
             "Orbit",
             3,
-            0,
+            0.65,
             6.65,
             90.28
         ],
@@ -2149,7 +2149,7 @@ divisionData["gal"] = {
             1726,
             "N.E.R.D.S. (Nifty Engineering Robotics Design Squad)",
             2,
-            0.07,
+            0.61,
             6.53,
             30.55
         ],
@@ -2173,7 +2173,7 @@ divisionData["gal"] = {
             2052,
             "KnightKrawler",
             2,
-            0,
+            1.25,
             1.12,
             47.29
         ],
@@ -2197,7 +2197,7 @@ divisionData["gal"] = {
             2168,
             "Aluminum Falcons",
             3,
-            0,
+            0.1,
             11.95,
             43.09
         ],
@@ -2205,7 +2205,7 @@ divisionData["gal"] = {
             2375,
             "Dragon Robotics",
             3,
-            0.29,
+            1.09,
             10.74,
             18.2
         ],
@@ -2237,7 +2237,7 @@ divisionData["gal"] = {
             2836,
             "Team Beta",
             3,
-            0,
+            0.32,
             14.01,
             45.99
         ],
@@ -2245,7 +2245,7 @@ divisionData["gal"] = {
             2990,
             "Hotwire",
             3,
-            0,
+            0.12,
             7.07,
             45.55
         ],
@@ -2253,7 +2253,7 @@ divisionData["gal"] = {
             3026,
             "Orange Crush",
             2,
-            0.34,
+            1.61,
             7.26,
             17.89
         ],
@@ -2261,7 +2261,7 @@ divisionData["gal"] = {
             3142,
             "Aperture",
             3,
-            0,
+            0.34,
             10.94,
             15.54
         ],
@@ -2269,7 +2269,7 @@ divisionData["gal"] = {
             3146,
             "GRANBY GRUNTS",
             3,
-            0.78,
+            2.29,
             15.96,
             50.8
         ],
@@ -2309,7 +2309,7 @@ divisionData["gal"] = {
             3410,
             "L.I.F.E.",
             2,
-            0,
+            0.03,
             2.62,
             15.15
         ],
@@ -2341,7 +2341,7 @@ divisionData["gal"] = {
             3668,
             "TroBots",
             4,
-            0.24,
+            1.31,
             16.05,
             26.55
         ],
@@ -2365,7 +2365,7 @@ divisionData["gal"] = {
             3787,
             "Wild Robotocats",
             3,
-            0,
+            1.39,
             12.03,
             29.97
         ],
@@ -2429,7 +2429,7 @@ divisionData["gal"] = {
             5216,
             "E-Ville Empire",
             3,
-            0,
+            0.26,
             15.87,
             25.57
         ],
@@ -2453,7 +2453,7 @@ divisionData["gal"] = {
             5460,
             "Strike Zone",
             3,
-            0,
+            1.06,
             12.06,
             29.67
         ],
@@ -2524,7 +2524,7 @@ divisionData["carv"] = {
             71,
             "Team Hammond",
             3,
-            1.19,
+            1.35,
             19.12,
             51.08
         ],
@@ -2532,7 +2532,7 @@ divisionData["carv"] = {
             75,
             "RoboRaiders",
             3,
-            0,
+            0.25,
             16.99,
             36.4
         ],
@@ -2540,7 +2540,7 @@ divisionData["carv"] = {
             126,
             "Gael Force",
             3,
-            0.8,
+            1.07,
             17.67,
             43.1
         ],
@@ -2556,7 +2556,7 @@ divisionData["carv"] = {
             144,
             "The R.O.C.K",
             2,
-            0.58,
+            1.76,
             0,
             28.68
         ],
@@ -2572,7 +2572,7 @@ divisionData["carv"] = {
             193,
             "MORT Beta",
             4,
-            0,
+            0.91,
             15.31,
             62.8
         ],
@@ -2612,7 +2612,7 @@ divisionData["carv"] = {
             359,
             "Hawaiian Kids",
             3,
-            0,
+            0.74,
             4.17,
             54.58
         ],
@@ -2620,7 +2620,7 @@ divisionData["carv"] = {
             368,
             "Team Kika Mana",
             2,
-            6.31,
+            7.07,
             14.32,
             71.29
         ],
@@ -2628,7 +2628,7 @@ divisionData["carv"] = {
             585,
             "Cyber Penguins",
             2,
-            2.22,
+            2.88,
             0,
             13.83
         ],
@@ -2636,7 +2636,7 @@ divisionData["carv"] = {
             771,
             "SWAT",
             2,
-            0,
+            1.59,
             2.04,
             11.47
         ],
@@ -2700,7 +2700,7 @@ divisionData["carv"] = {
             1625,
             "Winnovation",
             2,
-            0,
+            0.91,
             3.86,
             51.11
         ],
@@ -2748,7 +2748,7 @@ divisionData["carv"] = {
             1986,
             "Team Titanium",
             3,
-            9.08,
+            12.3,
             19.97,
             74.16
         ],
@@ -2764,7 +2764,7 @@ divisionData["carv"] = {
             2337,
             "EngiNERDs",
             3,
-            0,
+            11.89,
             11.58,
             39.77
         ],
@@ -2804,7 +2804,7 @@ divisionData["carv"] = {
             2834,
             "Bionic Black Hawks",
             3,
-            0,
+            0.47,
             15.5,
             44.52
         ],
@@ -2812,7 +2812,7 @@ divisionData["carv"] = {
             2852,
             "DM High Voltage",
             3,
-            0,
+            0.54,
             5.28,
             66.14
         ],
@@ -2820,7 +2820,7 @@ divisionData["carv"] = {
             2876,
             "Devilbotz",
             3,
-            0.44,
+            2.34,
             16.53,
             19.03
         ],
@@ -2868,7 +2868,7 @@ divisionData["carv"] = {
             3507,
             "Ubotics",
             2,
-            0,
+            0.14,
             3.35,
             13.15
         ],
@@ -2940,7 +2940,7 @@ divisionData["carv"] = {
             4001,
             "Retro-Rams",
             2,
-            0,
+            1.51,
             3.6,
             57.19
         ],
@@ -2972,7 +2972,7 @@ divisionData["carv"] = {
             4381,
             "Twisted Devils",
             4,
-            0,
+            2,
             23.76,
             36.95
         ],
@@ -3004,7 +3004,7 @@ divisionData["carv"] = {
             4911,
             "CyberKnights",
             4,
-            0,
+            0.06,
             9.86,
             42
         ],
@@ -3012,7 +3012,7 @@ divisionData["carv"] = {
             4915,
             "Spartronics",
             3,
-            0,
+            0.04,
             23.77,
             35.39
         ],
@@ -3020,7 +3020,7 @@ divisionData["carv"] = {
             4945,
             "Titanium-Wrecks",
             1,
-            0,
+            0.1,
             0,
             0
         ],
@@ -3036,7 +3036,7 @@ divisionData["carv"] = {
             5260,
             "Owosso Operating System",
             3,
-            0,
+            0.46,
             11.31,
             34.33
         ],
@@ -3139,7 +3139,7 @@ divisionData["hop"] = {
             11,
             "MORT",
             5,
-            0,
+            0.65,
             9.81,
             46.36
         ],
@@ -3147,7 +3147,7 @@ divisionData["hop"] = {
             33,
             "Killer Bees",
             3,
-            6.04,
+            10.69,
             10.76,
             89.38
         ],
@@ -3155,7 +3155,7 @@ divisionData["hop"] = {
             78,
             "AIR Strike",
             2,
-            0,
+            1.58,
             20.6,
             28.63
         ],
@@ -3171,7 +3171,7 @@ divisionData["hop"] = {
             125,
             "NUTRONS",
             5,
-            0,
+            0.08,
             16.66,
             52.92
         ],
@@ -3203,7 +3203,7 @@ divisionData["hop"] = {
             343,
             "Metal-In-Motion",
             2,
-            0.59,
+            3.35,
             11.04,
             48.05
         ],
@@ -3227,7 +3227,7 @@ divisionData["hop"] = {
             573,
             "Mech Warriors",
             3,
-            0.12,
+            1.5,
             21.4,
             51.1
         ],
@@ -3251,7 +3251,7 @@ divisionData["hop"] = {
             987,
             "HIGHROLLERS",
             2,
-            2.36,
+            12.22,
             13.3,
             71.56
         ],
@@ -3259,7 +3259,7 @@ divisionData["hop"] = {
             1124,
             "ÃœberBots",
             4,
-            0,
+            3.22,
             10.19,
             38.3
         ],
@@ -3275,7 +3275,7 @@ divisionData["hop"] = {
             1391,
             "The METAL MOOSE",
             2,
-            0,
+            0.63,
             7.64,
             9.05
         ],
@@ -3291,7 +3291,7 @@ divisionData["hop"] = {
             1676,
             "The Pascack PI-oneers",
             4,
-            0.2,
+            0.6,
             15.58,
             56.63
         ],
@@ -3299,7 +3299,7 @@ divisionData["hop"] = {
             1723,
             "The FBI - FIRST Bots of Independence",
             2,
-            0,
+            0.24,
             2.32,
             37.57
         ],
@@ -3331,7 +3331,7 @@ divisionData["hop"] = {
             2016,
             "Mighty Monkey Wrenches",
             3,
-            0,
+            0.07,
             15.96,
             56.1
         ],
@@ -3347,7 +3347,7 @@ divisionData["hop"] = {
             2169,
             "KING TeC",
             2,
-            0,
+            0.06,
             16.23,
             45.14
         ],
@@ -3363,7 +3363,7 @@ divisionData["hop"] = {
             2228,
             "CougarTech",
             2,
-            0,
+            0.26,
             5.99,
             46.98
         ],
@@ -3379,7 +3379,7 @@ divisionData["hop"] = {
             2500,
             "Herobotics",
             2,
-            0.76,
+            0.79,
             6.53,
             5.72
         ],
@@ -3411,7 +3411,7 @@ divisionData["hop"] = {
             2590,
             "Nemesis",
             4,
-            1.88,
+            2.85,
             9.98,
             69.63
         ],
@@ -3419,7 +3419,7 @@ divisionData["hop"] = {
             2609,
             "BeaverworX",
             2,
-            0,
+            2.08,
             9.25,
             25.26
         ],
@@ -3427,7 +3427,7 @@ divisionData["hop"] = {
             2614,
             "MARS",
             2,
-            0,
+            2.1,
             10.13,
             58.48
         ],
@@ -3475,7 +3475,7 @@ divisionData["hop"] = {
             3255,
             "Super NURDs",
             2,
-            0.32,
+            0.53,
             0.89,
             50.48
         ],
@@ -3515,7 +3515,7 @@ divisionData["hop"] = {
             3688,
             "Norsemen",
             3,
-            0.7,
+            0.76,
             20.53,
             35.86
         ],
@@ -3523,7 +3523,7 @@ divisionData["hop"] = {
             3735,
             "Klein Bots",
             3,
-            0,
+            0.93,
             5.02,
             48.47
         ],
@@ -3579,7 +3579,7 @@ divisionData["hop"] = {
             4391,
             "BraveBots",
             3,
-            0.74,
+            1.18,
             14.47,
             45.17
         ],
@@ -3619,7 +3619,7 @@ divisionData["hop"] = {
             4731,
             "MONARCH-E",
             2,
-            0,
+            0.16,
             6.6,
             11.62
         ],
@@ -3643,7 +3643,7 @@ divisionData["hop"] = {
             4930,
             "The Electric Mayhem",
             2,
-            0,
+            0.69,
             1.87,
             21.67
         ],
@@ -3699,7 +3699,7 @@ divisionData["hop"] = {
             5454,
             "Wild Fire",
             2,
-            0,
+            3.86,
             6.46,
             20.49
         ],
@@ -3715,7 +3715,7 @@ divisionData["hop"] = {
             5509,
             "Like a Boss.",
             3,
-            0.11,
+            2.09,
             12.21,
             32.4
         ],
@@ -3723,7 +3723,7 @@ divisionData["hop"] = {
             5562,
             "Lakers",
             3,
-            0.42,
+            1.81,
             9.43,
             37.49
         ],
@@ -3762,7 +3762,7 @@ divisionData["tes"] = {
             48,
             "Delphi E.L.I.T.E.",
             3,
-            0.39,
+            1.03,
             6.26,
             65.84
         ],
@@ -3770,7 +3770,7 @@ divisionData["tes"] = {
             58,
             "The Riot Crew",
             3,
-            0,
+            0.74,
             14.3,
             43.31
         ],
@@ -3778,7 +3778,7 @@ divisionData["tes"] = {
             141,
             "WOBOT",
             4,
-            0,
+            1.81,
             23.41,
             32
         ],
@@ -3794,7 +3794,7 @@ divisionData["tes"] = {
             226,
             "Hammerheads",
             3,
-            0,
+            0.58,
             18.46,
             51.15
         ],
@@ -3810,7 +3810,7 @@ divisionData["tes"] = {
             292,
             "PantherTech",
             3,
-            0.15,
+            0.57,
             15.22,
             28.11
         ],
@@ -3882,7 +3882,7 @@ divisionData["tes"] = {
             1225,
             "Gorillas",
             2,
-            0,
+            0.06,
             7.21,
             26.28
         ],
@@ -3890,7 +3890,7 @@ divisionData["tes"] = {
             1255,
             "Blarglefish",
             2,
-            0.67,
+            3.24,
             0,
             28.32
         ],
@@ -3914,7 +3914,7 @@ divisionData["tes"] = {
             1403,
             "Cougar Robotics",
             3,
-            0,
+            0.51,
             8.72,
             61.84
         ],
@@ -3938,7 +3938,7 @@ divisionData["tes"] = {
             1523,
             "Mega Awesome Robotic Systems (MARS)",
             2,
-            0,
+            0.55,
             6.3,
             60.57
         ],
@@ -3946,7 +3946,7 @@ divisionData["tes"] = {
             1610,
             "B.O.T. (Builders of Tomorrow)",
             2,
-            0.75,
+            0.92,
             4.33,
             11.58
         ],
@@ -3978,7 +3978,7 @@ divisionData["tes"] = {
             1836,
             "The MilkenKnights",
             3,
-            0,
+            0.04,
             7.27,
             30.04
         ],
@@ -3986,7 +3986,7 @@ divisionData["tes"] = {
             2054,
             "Tech Vikes",
             4,
-            13.41,
+            15.84,
             10.13,
             60.95
         ],
@@ -3994,7 +3994,7 @@ divisionData["tes"] = {
             2059,
             "The Hitchhikers",
             2,
-            0,
+            0.26,
             0.87,
             15.78
         ],
@@ -4002,7 +4002,7 @@ divisionData["tes"] = {
             2062,
             "C.O.R.E 2062",
             2,
-            0.49,
+            1.74,
             8.52,
             58.53
         ],
@@ -4010,7 +4010,7 @@ divisionData["tes"] = {
             2122,
             "Team Tators",
             2,
-            0,
+            0.53,
             3.33,
             98.3
         ],
@@ -4026,7 +4026,7 @@ divisionData["tes"] = {
             2170,
             "Titanium Tomahawks",
             3,
-            0,
+            0.04,
             9.25,
             61.06
         ],
@@ -4034,7 +4034,7 @@ divisionData["tes"] = {
             2191,
             "Flux Core",
             3,
-            0,
+            1.22,
             15.21,
             26.4
         ],
@@ -4042,7 +4042,7 @@ divisionData["tes"] = {
             2399,
             "Fighting Unicorns",
             2,
-            0.89,
+            1.24,
             10.54,
             12.55
         ],
@@ -4066,7 +4066,7 @@ divisionData["tes"] = {
             2486,
             "CocoNuts",
             2,
-            0.25,
+            1.96,
             10.21,
             9.02
         ],
@@ -4074,7 +4074,7 @@ divisionData["tes"] = {
             2526,
             "Crimson Robotics",
             2,
-            0,
+            1.76,
             19.24,
             25.3
         ],
@@ -4122,7 +4122,7 @@ divisionData["tes"] = {
             2883,
             "F.R.E.D (Fighting Rednecks Engineering and Design)",
             2,
-            0,
+            0.94,
             7.96,
             54.67
         ],
@@ -4130,7 +4130,7 @@ divisionData["tes"] = {
             2930,
             "Glacier Peak Sonic Squirrels",
             4,
-            1,
+            2.09,
             6.93,
             50.95
         ],
@@ -4138,7 +4138,7 @@ divisionData["tes"] = {
             2950,
             "Devastators",
             2,
-            0,
+            0.2,
             2.54,
             13.72
         ],
@@ -4154,7 +4154,7 @@ divisionData["tes"] = {
             2960,
             "automation nation",
             4,
-            0,
+            0.3,
             19.86,
             41.21
         ],
@@ -4178,7 +4178,7 @@ divisionData["tes"] = {
             3184,
             "Blaze Robotics",
             2,
-            0,
+            0.43,
             9.77,
             4.71
         ],
@@ -4202,7 +4202,7 @@ divisionData["tes"] = {
             3476,
             "Code Orange",
             2,
-            0,
+            0.69,
             1.53,
             69.61
         ],
@@ -4210,7 +4210,7 @@ divisionData["tes"] = {
             3656,
             "Dreadbots",
             3,
-            0,
+            2.58,
             15.31,
             24.5
         ],
@@ -4218,7 +4218,7 @@ divisionData["tes"] = {
             3824,
             "HVA RoHAWKtics",
             2,
-            0.04,
+            0.92,
             8.92,
             91.06
         ],
@@ -4242,7 +4242,7 @@ divisionData["tes"] = {
             4003,
             "TriSonics",
             3,
-            7.33,
+            17.19,
             12.76,
             40.87
         ],
@@ -4290,7 +4290,7 @@ divisionData["tes"] = {
             5072,
             "Raider Robotics",
             3,
-            0,
+            1.36,
             7.25,
             26.66
         ],
@@ -4306,7 +4306,7 @@ divisionData["tes"] = {
             5415,
             "Bears",
             2,
-            0,
+            0.21,
             6.77,
             37.7
         ],
@@ -4354,7 +4354,7 @@ divisionData["tes"] = {
             5712,
             "Gray Matter",
             4,
-            0,
+            0.35,
             8.8,
             23.14
         ],
@@ -4417,7 +4417,7 @@ divisionData["cars"] = {
             85,
             "B.O.B. (Built on Brains)",
             3,
-            0,
+            1.52,
             15.27,
             54.73
         ],
@@ -4441,7 +4441,7 @@ divisionData["cars"] = {
             203,
             "One TUFF Team (Team United for FIRST)",
             3,
-            0.76,
+            0.81,
             17.67,
             40.44
         ],
@@ -4449,7 +4449,7 @@ divisionData["cars"] = {
             225,
             "TechFire",
             3,
-            12.36,
+            12.8,
             18.3,
             77.29
         ],
@@ -4457,7 +4457,7 @@ divisionData["cars"] = {
             236,
             "Techno-Ticks",
             3,
-            8.87,
+            9.83,
             4.41,
             39.75
         ],
@@ -4481,7 +4481,7 @@ divisionData["cars"] = {
             375,
             "Robotic Plague",
             2,
-            0,
+            0.4,
             1.9,
             24.7
         ],
@@ -4489,7 +4489,7 @@ divisionData["cars"] = {
             399,
             "Eagle Robotics",
             3,
-            0,
+            0.25,
             8.2,
             64.56
         ],
@@ -4497,7 +4497,7 @@ divisionData["cars"] = {
             418,
             "Purple Haze",
             2,
-            0.11,
+            2.25,
             4.41,
             42.67
         ],
@@ -4505,7 +4505,7 @@ divisionData["cars"] = {
             467,
             "Shrewsbury Colonials",
             3,
-            0,
+            0.7,
             7.33,
             24.43
         ],
@@ -4529,7 +4529,7 @@ divisionData["cars"] = {
             999,
             "MechaRams",
             3,
-            0,
+            2.8,
             14.74,
             52.33
         ],
@@ -4537,7 +4537,7 @@ divisionData["cars"] = {
             1058,
             "PVC Pirates",
             3,
-            0,
+            0.52,
             12.46,
             32.24
         ],
@@ -4545,7 +4545,7 @@ divisionData["cars"] = {
             1241,
             "THEORY6",
             3,
-            0.07,
+            0.8,
             6.25,
             24.14
         ],
@@ -4569,7 +4569,7 @@ divisionData["cars"] = {
             1325,
             "Inverse Paradox",
             3,
-            0,
+            3.38,
             6.48,
             62.36
         ],
@@ -4601,7 +4601,7 @@ divisionData["cars"] = {
             1511,
             "Rolling Thunder",
             2,
-            0,
+            1.02,
             9.9,
             37.54
         ],
@@ -4609,7 +4609,7 @@ divisionData["cars"] = {
             1519,
             "Mechanical Mayhem",
             4,
-            15.82,
+            17.96,
             27.25,
             83.4
         ],
@@ -4649,7 +4649,7 @@ divisionData["cars"] = {
             1885,
             "ILITE Robotics",
             2,
-            0,
+            1.6,
             12.94,
             20.04
         ],
@@ -4681,7 +4681,7 @@ divisionData["cars"] = {
             2377,
             "C Company",
             2,
-            0,
+            0.91,
             3.65,
             34.74
         ],
@@ -4697,7 +4697,7 @@ divisionData["cars"] = {
             2521,
             "SERT",
             3,
-            0.1,
+            0.48,
             13.08,
             34.61
         ],
@@ -4705,7 +4705,7 @@ divisionData["cars"] = {
             2534,
             "The Lakers",
             2,
-            0,
+            0.7,
             2.12,
             31.89
         ],
@@ -4777,7 +4777,7 @@ divisionData["cars"] = {
             3604,
             "Goon Squad",
             3,
-            0.72,
+            1.98,
             15.86,
             48.78
         ],
@@ -4785,7 +4785,7 @@ divisionData["cars"] = {
             3728,
             "Iron Panda",
             1,
-            0,
+            0.22,
             12.49,
             0
         ],
@@ -4833,7 +4833,7 @@ divisionData["cars"] = {
             4499,
             "The Highlanders",
             2,
-            0,
+            0.38,
             15.7,
             33.58
         ],
@@ -4873,7 +4873,7 @@ divisionData["cars"] = {
             4980,
             "Canine Crusaders",
             4,
-            0,
+            2.54,
             16.77,
             39.26
         ],
@@ -4913,7 +4913,7 @@ divisionData["cars"] = {
             5338,
             "RoboLoCo",
             2,
-            0,
+            1.75,
             6.88,
             40.29
         ],
