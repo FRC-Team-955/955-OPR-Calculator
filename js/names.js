@@ -5797,6 +5797,7 @@ function setEventNamesAndCodes()
 {
 	eventNames = 
 	[
+        "Chezy Champs",
 		"Western Canada Regional",
 		"Archimedes Division ",
 		"Arkansas Rock City Regional",
@@ -5919,6 +5920,7 @@ function setEventNamesAndCodes()
 	
 	eventCodes = 
 	[
+        "cc",
 		"abca",
 		"arc",
 		"arfa",
