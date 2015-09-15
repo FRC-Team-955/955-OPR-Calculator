@@ -1039,7 +1039,7 @@ function getEmptyMatrix(row, column)
 // Gets data from thebluealliance
 function getData(key, callback)
 {
-	var begApiUrl = "http://www.thebluealliance.com/api/v2/";
+	var begApiUrl = "https://www.thebluealliance.com/api/v2/";
 	var endApiUrl = "?X-TBA-App-Id=frc955:opr-system:v02";
 	
 	if(callback)
@@ -1185,28 +1185,33 @@ function makeTable(table, newDataTable, isRowTable, startDark, firstRowBolded)
 }
 
 // Sorts data table
-function sortDataTable(e)
+function sortDataTable(e, inc)
 {	
 	if(tableData.data.length <= 1)
 		return;
 	
 	var colIndex = e.target.id;
-	var inc = tableData.dataInc[colIndex];
 	
-	// Insertion sort
-	for(var i = 1; i < tableData.data.length; i++)
+	while(true)
 	{
-		var j = i;
+		var sorted = true;
 		
-		while(j > 0 && (inc ? tableData.data[j - 1][colIndex] < tableData.data[i][colIndex] : tableData.data[j - 1][colIndex] > tableData.data[i][colIndex]))
-			j--;
+		for(var i = 0; i < tableData.data.length - 1; i++)
+		{
+			var currVal = tableData.data[i][colIndex];
+			var nextVal = tableData.data[i + 1][colIndex];
+			
+			if((tableData.dataInc[colIndex] && currVal < nextVal) || (!tableData.dataInc[colIndex] && currVal > nextVal))
+			{
+				var tmp = tableData.data[i];
+				tableData.data[i] = tableData.data[i + 1];
+				tableData.data[i + 1] = tmp;
+				sorted = false;
+			}
+		}
 		
-		var tmp = tableData.data[i];
-		
-		for(var k = i; k > j; k--)
-			tableData.data[k] = tableData.data[k - 1];
-		
-		tableData.data[j] = tmp;
+		if(sorted)
+			break;
 	}
 	
 	tableData.dataInc[colIndex] = !tableData.dataInc[colIndex];
