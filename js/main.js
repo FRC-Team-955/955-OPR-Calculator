@@ -1039,7 +1039,7 @@ function getEmptyMatrix(row, column)
 // Gets data from thebluealliance
 function getData(key, callback)
 {
-	var begApiUrl = "http://www.thebluealliance.com/api/v2/";
+	var begApiUrl = "https://www.thebluealliance.com/api/v2/";
 	var endApiUrl = "?X-TBA-App-Id=frc955:opr-system:v02";
 	
 	if(callback)
